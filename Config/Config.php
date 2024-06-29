@@ -4,7 +4,6 @@ require 'vendor/autoload.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable("./");
 $dotenv->load();
-print_r($_ENV);
 define("HOST", $_ENV['HOST']);
 define("USER", $_ENV['USERDB']);
 define("PASSWORD", $_ENV['PASSWORD']);
