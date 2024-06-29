@@ -41,6 +41,7 @@ class SpeedModel extends Query
         $data = $this->select($sql);
         $data = $data[0];
 
+
         $html = '
         <!DOCTYPE html>
         <html lang="es">
