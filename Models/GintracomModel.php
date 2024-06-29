@@ -31,14 +31,13 @@ class GintracomModel extends Query
                     $sql = "UPDATE facturas_cot SET estado_guia_sistema = '" . $dato["estado"] . "' WHERE guia_laar = '" . $guia . "'";
                     $response = mysqli_query($this->market, $sql);
                 }
-                $tienda_proveedor = $data2[0]["tienda_proveedor"];
-                $tienda_venta = $data2[0]["tienda_venta"];
-                $nombreD = $data2[0]["nombreD"];
+                $plataforma = $data2[0]["id_plataforma"];
+                $nombreD = $data2[0]["nombre"];
                 print_r($dato["novedades"]);
                 if (isset($dato["novedades"])) {
                     if (empty($dato["novedades"]["nombreNovedad"]) || $dato["novedades"]["nombreNovedad"] == "null" || $dato["novedades"]["nombreNovedad"] == null) {
                     } else {
-                        $sql = "INSERT INTO novedades (guia_novedad, cliente_novedad, estado_novedad, novedad, tracking, fecha, tienda) VALUES ( '" . $guia . "', '" . $nombreD . "', '" . $dato["estado"] . "', '" . $dato["novedades"]["nombreNovedad"] . "', '" . $dato["novedades"]["tracking"] . "', '" . $dato["novedades"]["fecha"] . "', '" . $tienda_venta . "')";
+                        $sql = "INSERT INTO novedades (guia_novedad, cliente_novedad, estado_novedad, novedad, tracking, fecha, id_plataforma) VALUES ( '" . $guia . "', '" . $nombreD . "', '" . $dato["estado"] . "', '" . $dato["novedades"]["nombreNovedad"] . "', '" . $dato["novedades"]["tracking"] . "', '" . $dato["novedades"]["fecha"] . "', '" . $plataforma . "')";
                         $response = mysqli_query($this->market, $sql);
                     }
                 }
