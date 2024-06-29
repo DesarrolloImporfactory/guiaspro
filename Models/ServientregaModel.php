@@ -229,10 +229,10 @@ class ServientregaModel extends Query
         $result_existe = mysqli_query($this->market, $existe);
         $row_existe = mysqli_fetch_assoc($result_existe);
         if ($row_existe) {
-            $sql = "UPDATE novedades SET estado_novedad = ?, novedad = ? WHERE guia_novedad = ?";
+            $sql = "UPDATE novedades SET estado_novedad = ?, novedad = ?, solucionada = ? WHERE guia_novedad = ?";
             $stmt = $this->market->prepare($sql);
             $observacion = $guia["observacion1"] . " - " . $guia["observacion2"] . " - " . $guia["observacion3"];
-            $stmt->bind_param("iss", $guia["movimiento"], $observacion, $laar);
+            $stmt->bind_param("iss", $guia["movimiento"], $observacion, 0, $laar);
             if ($stmt->execute()) {
                 echo "Datos actualizados correctamente.";
             } else {
