@@ -21,18 +21,22 @@ class SpeedModel extends Query
     {
         $sql = "SELECT MAX(id_speed) AS id FROM guias_speed;";
         $data = $this->select($sql);
-        print_r($data);
-        if (empty($data[0]["id"])) {
+
+        if (empty($data[0]['id'])) {
             $guia = "SPD0000001";
         } else {
-            $guia = $data[0]["id"];
-            $guia = substr($guia, 3);
-            $guia = (int)$guia;
-            $guia++;
-            $guia = "SPD" . str_pad($guia, 7, "0", STR_PAD_LEFT);
+            $guia = $data[0]['id'];
+
+            // Asegúrate de que $guia se manipule como una cadena
+            $guia = substr($guia, 3); // Extrae la parte numérica de la cadena
+            $guia = (int)$guia; // Convierte la parte numérica a un entero
+            $guia++; // Incrementa el valor
+            $guia = "SPD" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatea el número de vuelta a una cadena
         }
+
         return $guia;
     }
+
 
     public function generarGuia($guia)
     {
