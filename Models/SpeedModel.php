@@ -26,6 +26,7 @@ class SpeedModel extends Query
             $guia = "SPD0000001";
         } else {
             $guia = $data[0]['id'];
+            echo $guia;
 
             // Verificar si $guia tiene el prefijo 'SPD'
             if (strpos($guia, 'SPD') === 0) {
@@ -37,6 +38,7 @@ class SpeedModel extends Query
             $guia = (int)$guia; // Convierte la parte numérica a un entero
             $guia++; // Incrementa el valor
             $guia = "SPD" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatea el número de vuelta a una cadena
+            echo "XD";
         }
 
         echo $guia; // Esto debería mostrar el valor incrementado correctamente
