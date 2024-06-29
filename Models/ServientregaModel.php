@@ -222,6 +222,7 @@ class ServientregaModel extends Query
         $result = mysqli_query($this->market, $sql);
         $row = mysqli_fetch_assoc($result);
         $nombreD = $row['nombre'];
+        $id_plataforma = $row['id_plataforma'];
 
 
         $existe  = "SELECT * FROM novedades WHERE guia_novedad = '$laar'";
@@ -237,7 +238,7 @@ class ServientregaModel extends Query
                 echo "Error al actualizar datos: " . $stmt->error;
             }
         } else {
-            $sql = "INSERT INTO novedades (guia_novedad, cliente_novedad, estado_novedad, novedad, solucion_novedad, tracking) VALUES (?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO novedades (guia_novedad, cliente_novedad, estado_novedad, novedad, solucion_novedad, tracking, id_plataforma) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $this->market->prepare($sql);
 
             // Revisar si la preparación fue exitosa
@@ -250,13 +251,14 @@ class ServientregaModel extends Query
             echo $guia["movimiento"];
             // Vincular los parámetros a la sentencia
             $stmt->bind_param(
-                'ssisss',
+                'ssisssi',
                 $laar,
                 $nombreD,
                 $guia["movimiento"],
                 $observa,
                 $gio,
-                $tracking
+                $tracking,
+                $id_plataforma
             );
 
             // Ejecutar la consulta
