@@ -24,18 +24,22 @@ class SpeedModel extends Query
 
         if (empty($data[0]['id'])) {
             $guia = "SPD0000001";
-            echo "XD";
         } else {
             $guia = $data[0]['id'];
-            echo $guia;
-            // Asegúrate de que $guia se manipule como una cadena
-            $guia = substr($guia, 3); // Extrae la parte numérica de la cadena
+
+            // Verificar si $guia tiene el prefijo 'SPD'
+            if (strpos($guia, 'SPD') === 0) {
+                $guia = substr($guia, 3); // Extrae la parte numérica de la cadena
+            } else {
+                $guia = '0'; // Si no tiene el prefijo, inicia en 0
+            }
+
             $guia = (int)$guia; // Convierte la parte numérica a un entero
             $guia++; // Incrementa el valor
             $guia = "SPD" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatea el número de vuelta a una cadena
-            echo "DX";
         }
 
+        echo $guia; // Esto debería mostrar el valor incrementado correctamente
         return $guia;
     }
 
