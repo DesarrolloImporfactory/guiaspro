@@ -19,14 +19,14 @@ class SpeedModel extends Query
 
     public function ultimaGuia()
     {
-        $sql = "SELECT MAX(id_speed) AS id FROM guias_speed;";
+        $sql = "SELECT MAX(id_speed), guia AS id FROM guias_speed;";
         $data = $this->select($sql);
 
         if (empty($data[0]['id'])) {
             $guia = "SPD0000001";
         } else {
-            $guia = $data[0]['id'];
-            echo $guia;
+            $guia = $data[0]['guia'];
+
 
             // Verificar si $guia tiene el prefijo 'SPD'
             if (strpos($guia, 'SPD') === 0) {
@@ -38,7 +38,7 @@ class SpeedModel extends Query
             $guia = (int)$guia; // Convierte la parte numérica a un entero
             $guia++; // Incrementa el valor
             $guia = "SPD" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatea el número de vuelta a una cadena
-            echo "XD";
+
         }
 
         echo $guia; // Esto debería mostrar el valor incrementado correctamente
