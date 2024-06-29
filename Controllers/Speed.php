@@ -43,7 +43,7 @@ class Speed extends Controller
 
     public function descargar($guia)
     {
-        $response = $this->model->generarGuia($guia);
+        $response = $this->model->descargar($guia);
         echo json_encode($response);
     }
 }
