@@ -21,7 +21,6 @@ class SpeedModel extends Query
     {
         $sql = "SELECT MAX(id_speed) AS id, guia FROM guias_speed;";
         $data = $this->select($sql);
-        print_r($data);
         if (empty($data[0]['id'])) {
             $guia = "SPD0000001";
         } else {
@@ -41,7 +40,6 @@ class SpeedModel extends Query
 
         }
 
-        echo $guia; // Esto debería mostrar el valor incrementado correctamente
         return $guia;
     }
 
