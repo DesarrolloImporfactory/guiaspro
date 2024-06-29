@@ -196,6 +196,7 @@ class SpeedModel extends Query
 
         $sql = "INSERT INTO `visor`(`html`, `guia`) VALUES (?,?)";
         $data = [$html, $guia];
+
         $insert = $this->insert($sql, $data);
 
         if ($insert == 1) {
