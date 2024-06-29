@@ -26,6 +26,7 @@ class GintracomModel extends Query
                 $sql = "SELECT * FROM facturas_cot where numero_guia = '$guia'";
                 $data2 = mysqli_query($this->market, $sql);
                 $data2 = mysqli_fetch_all($data2, MYSQLI_ASSOC);
+                print_r($data2);
                 //actualiza market
                 if (count($data) > 0) {
                     $sql = "UPDATE facturas_cot SET estado_guia_sistema = '" . $dato["estado"] . "' WHERE guia_laar = '" . $guia . "'";
