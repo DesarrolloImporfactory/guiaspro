@@ -20,7 +20,8 @@ class SpeedModel extends Query
 
     public function ultimaGuia()
     {
-        $sql = "SELECT MAX(id_speed) AS id, guia FROM guias_speed;";
+        $sql = "SELECT MAX(id_speed) AS id, MAX(guia) FROM guias_speed;
+";
         $data = $this->select($sql);
         if (empty($data[0]['id'])) {
             $guia = "SPD0000001";
