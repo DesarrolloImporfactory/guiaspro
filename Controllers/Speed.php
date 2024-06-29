@@ -40,4 +40,10 @@ class Speed extends Controller
         $response = $this->model->crear($nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $recuado, $observacion, $monto_factura);
         echo json_encode($response);
     }
+
+    public function descargar($guia)
+    {
+        $response = $this->model->generarGuia($guia);
+        echo json_encode($response);
+    }
 }
