@@ -21,7 +21,7 @@ class SpeedModel extends Query
     {
         $sql = "SELECT MAX(id_speed) AS id FROM guias_speed;";
         $data = $this->select($sql);
-        if (empty($data) || $data[0]["id_speed"]) {
+        if (empty($data)) {
             $guia = "SPD0000001";
         } else {
             $guia = $data[0]["id_speed"];
