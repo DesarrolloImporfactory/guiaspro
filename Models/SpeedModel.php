@@ -14,7 +14,8 @@ class SpeedModel extends Query
         $data = [$nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $guia, $recaudo, $observacion, $monto_factura];
         $insert = $this->insert($sql, $data);
 
-        $this->generarGuia($guia);
+        $response = $this->generarGuia($guia);
+        return $response;
     }
 
     public function ultimaGuia()
