@@ -23,7 +23,7 @@ class GintracomModel extends Query
         if (isset($datos["data"]) && is_array($datos["data"])) {
             foreach ($datos["data"] as $dato) {
                 $guia = $dato["guia"];
-                $sql = "SELECT * FROM guia_laar where guia_laar = '$guia'";
+                $sql = "SELECT * FROM facturas_cot where numero_guia = '$guia'";
                 $data2 = mysqli_query($this->market, $sql);
                 $data2 = mysqli_fetch_all($data2, MYSQLI_ASSOC);
                 //actualiza market
