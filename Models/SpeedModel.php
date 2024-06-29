@@ -25,7 +25,7 @@ class SpeedModel extends Query
         if (empty($data[0]["id"])) {
             $guia = "SPD0000001";
         } else {
-            $guia = $data[0]["id_speed"];
+            $guia = $data[0]["id"];
             $guia = substr($guia, 3);
             $guia = (int)$guia;
             $guia++;
