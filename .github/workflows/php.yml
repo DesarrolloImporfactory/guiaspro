@@ -48,6 +48,4 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps # or ftp depending on your server setup
-          local-dir: ./ # specify the local directory if needed
-          server-dir: /public_html/ # specify the server directory if needed
+         
