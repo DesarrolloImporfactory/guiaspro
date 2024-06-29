@@ -1,4 +1,9 @@
 <?php
+require 'vendor/autoload.php';
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 class SpeedModel extends Query
 {
     public function __construct()
@@ -27,21 +32,16 @@ class SpeedModel extends Query
             $guia = "SPD0000001";
         } else {
             $guia = $data[0]['guia'];
-
-
             // Verificar si $guia tiene el prefijo 'SPD'
             if (strpos($guia, 'SPD') === 0) {
                 $guia = substr($guia, 3); // Extrae la parte numérica de la cadena
             } else {
                 $guia = '0'; // Si no tiene el prefijo, inicia en 0
             }
-
             $guia = (int)$guia; // Convierte la parte numérica a un entero
             $guia++; // Incrementa el valor
             $guia = "SPD" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatea el número de vuelta a una cadena
-
         }
-
         return $guia;
     }
 
@@ -217,6 +217,30 @@ class SpeedModel extends Query
             return ["status" => 200, "message" => "Guia generada", "guia" => $guia];
         } else {
             return ["status" => 500, "message" => "Error al generar guia"];
+        }
+    }
+
+    public function descargar($guia)
+    {
+        $sql = "SELECT * FROM visor WHERE guia = '$guia'";
+        $data = $this->select($sql);
+        $data = $data[0];
+
+        if (!empty($data)) {
+            $html = $data['html'];
+            $options = new Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isPhpEnabled', true);
+            $options->set('isRemoteEnabled', true);
+            $options->set('isFontSubsettingEnabled', true);
+            $options->set('defaultFont', 'Arial');
+            $dompdf = new Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper(array(0, 0, 4.937 * 72, 4.937 * 72), 'portrait');
+            $dompdf->render();
+            $dompdf->stream($guia . ".pdf", array("Attachment" => 1));
+        } else {
+            echo "No se encontro la guia";
         }
     }
 }
