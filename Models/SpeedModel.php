@@ -24,6 +24,7 @@ class SpeedModel extends Query
 
         if (empty($data[0]['id'])) {
             $guia = "SPD0000001";
+            echo "XD";
         } else {
             $guia = $data[0]['id'];
 
@@ -32,6 +33,7 @@ class SpeedModel extends Query
             $guia = (int)$guia; // Convierte la parte numérica a un entero
             $guia++; // Incrementa el valor
             $guia = "SPD" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatea el número de vuelta a una cadena
+            echo "DX";
         }
 
         return $guia;
