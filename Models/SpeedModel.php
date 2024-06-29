@@ -48,7 +48,7 @@ class SpeedModel extends Query
 
     public function generarGuia($guia)
     {
-        $imagen = "https://tiendas.imporsuitpro.com/imgs/SPEED.jpg";
+        $imagen = "https://tiendas.imporsuitpro.com/imgs/Speed.png";
 
         $sql = "SELECT * FROM guias_speed WHERE guia = '$guia'";
         $data = $this->select($sql);
