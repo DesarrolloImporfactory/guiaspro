@@ -218,6 +218,12 @@ class ServientregaModel extends Query
     {
         print_r($guia);
 
+        $sql = "SELECT * FROM facturas_cot WHERE numero_guia = '$laar'";
+        $result = mysqli_query($this->market, $sql);
+        $row = mysqli_fetch_assoc($result);
+        $nombreD = $row['nombre'];
+
+
         $existe  = "SELECT * FROM novedades WHERE guia_novedad = '$laar'";
         $result_existe = mysqli_query($this->market, $existe);
         $row_existe = mysqli_fetch_assoc($result_existe);
