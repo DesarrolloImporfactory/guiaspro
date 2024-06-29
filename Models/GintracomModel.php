@@ -38,7 +38,7 @@ class GintracomModel extends Query
                 if (isset($dato["novedades"])) {
                     if (empty($dato["novedades"]["nombreNovedad"]) || $dato["novedades"]["nombreNovedad"] == "null" || $dato["novedades"]["nombreNovedad"] == null) {
                     } else {
-                        $sql = "INSERT INTO novedades (guia_novedad, cliente_novedad, estado_novedad, novedad, tracking, fecha, id_plataforma) VALUES ( '" . $guia . "', '" . $nombreD . "', '" . $dato["estado"] . "', '" . $dato["novedades"]["nombreNovedad"] . "', '" . $dato["novedades"]["tracking"] . "', '" . $dato["novedades"]["fecha"] . "', '" . $plataforma . "')";
+                        $sql = "INSERT INTO novedades (guia_novedad, cliente_novedad, estado_novedad, novedad, tracking, fecha, id_plataforma) VALUES ( '" . $guia . "', '" . $nombreD . "', '" . $dato["estado"] . "', '" . $dato["novedades"]["nombreNovedad"] . "', 'https://ec.gintracom.site/web/site/tracking', '" . $dato["novedades"]["fechaNovedad"] . "', '" . $plataforma . "')";
                         $response = mysqli_query($this->market, $sql);
                     }
                 }
