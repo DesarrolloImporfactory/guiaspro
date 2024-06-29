@@ -231,7 +231,7 @@ class ServientregaModel extends Query
         if ($row_existe) {
             $sql = "UPDATE novedades SET estado_novedad = ?, novedad = ?, solucionada = ? WHERE guia_novedad = ?";
             $stmt = $this->market->prepare($sql);
-            $observacion = $guia["observacion1"];
+            $observacion = $guia["observacion1"] . " - " . $guia["observacion2"] . " - " . $guia["observacion3"];
             $stmt->bind_param("isis", $guia["movimiento"], $observacion, 0, $laar);
             if ($stmt->execute()) {
                 echo "Datos actualizados correctamente.";
