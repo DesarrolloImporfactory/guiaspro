@@ -6,7 +6,7 @@ $dotenv = Dotenv\Dotenv::createImmutable("./");
 $dotenv->load();
 print_r($_ENV);
 define("HOST", $_ENV['HOST']);
-define("USER", $_ENV['USER']);
+define("USER", $_ENV['USERDB']);
 define("PASSWORD", $_ENV['PASSWORD']);
 define("DB", $_ENV['DB']);
 define("CHARSET", $_ENV['CHARSET']);
