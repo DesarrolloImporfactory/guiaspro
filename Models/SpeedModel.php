@@ -27,7 +27,7 @@ class SpeedModel extends Query
             echo "XD";
         } else {
             $guia = $data[0]['id'];
-
+            echo $guia;
             // Asegúrate de que $guia se manipule como una cadena
             $guia = substr($guia, 3); // Extrae la parte numérica de la cadena
             $guia = (int)$guia; // Convierte la parte numérica a un entero
