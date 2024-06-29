@@ -29,7 +29,7 @@ class GintracomModel extends Query
                 print_r($data2);
                 //actualiza market
                 if (count($data) > 0) {
-                    $sql = "UPDATE facturas_cot SET estado_guia_sistema = '" . $dato["estado"] . "' WHERE guia_laar = '" . $guia . "'";
+                    $sql = "UPDATE facturas_cot SET estado_guia_sistema = '" . $dato["estado"] . "' WHERE numero_guia = '" . $guia . "'";
                     $response = mysqli_query($this->market, $sql);
                 }
                 $plataforma = $data2[0]["id_plataforma"];
