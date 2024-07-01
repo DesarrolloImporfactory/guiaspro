@@ -84,6 +84,11 @@ class GintracomModel extends Query
     {
         $url = "https://ec.gintracom.site/web/import-suite/anular";
         $response = $this->enviar_datos($url, $id);
+
+        $sql = "UPDATE facturas_cot SET estado_guia_sistema = '8', anulada =1 WHERE  numero_guia = '" . $id . "'";
+        $response = mysqli_query($this->market, $sql);
+
+
         echo $response;
     }
 
