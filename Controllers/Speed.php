@@ -46,4 +46,10 @@ class Speed extends Controller
         $response = $this->model->descargar($guia);
         echo json_encode($response);
     }
+
+    public function anular($guia)
+    {
+        $response = $this->model->anular($guia);
+        echo json_encode($response);
+    }
 }
