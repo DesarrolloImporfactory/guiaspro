@@ -6,9 +6,11 @@ use Dompdf\Options;
 
 class SpeedModel extends Query
 {
+    private $market;
     public function __construct()
     {
         parent::__construct();
+        $this->market = mysqli_connect(HOSTMARKET, USERMARKET, PASSWORDMARKET, DBMARKET);
     }
 
     public function crear($nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $recaudo, $observacion, $monto_factura)
@@ -242,5 +244,17 @@ class SpeedModel extends Query
         } else {
             echo "No se encontro la guia";
         }
+    }
+
+    public function anular($guia)
+    {
+        $sql = "UPDATE guias_speed SET estado = 8 WHERE guia = ?";
+        $update = $this->update($sql, [$guia]);
+
+        $sql = "UPDATE facturas_cot SET estado_guia_sistema = '8', anulada = 1 WHERE numero_guia = '$guia'";
+        $update = mysqli_query($this->market, $sql);
+
+        $sql = "DELETE FROM cabecera_cuenta_pagar WHERE guia = '$guia'";
+        $delete = mysqli_query($this->market, $sql);
     }
 }

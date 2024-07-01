@@ -124,6 +124,13 @@ class ServientregaModel extends Query
         curl_close($ch);
         echo $response;
         $this->cambioDeEstado($id, "101");
+
+        $sql = "UPDATE facturas_cot SET anulada = 1 WHERE numero_guia = '$id'";
+
+        $result = mysqli_query($this->market, $sql);
+
+        $sql = "DELETE FROM cabecera_cuenta_pagar WHERE guia = '$id'";
+        $result = mysqli_query($this->market, $sql);
     }
 
     private function enviar_waller($data, $guia)

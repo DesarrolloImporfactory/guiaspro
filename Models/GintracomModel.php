@@ -88,6 +88,9 @@ class GintracomModel extends Query
         $sql = "UPDATE facturas_cot SET estado_guia_sistema = '8', anulada =1 WHERE  numero_guia = '" . $id . "'";
         $response = mysqli_query($this->market, $sql);
 
+        $sql = "DELETE FROM cabecera_cuenta_pagar WHERE guia = '" . $id . "'";
+        $response = mysqli_query($this->market, $sql);
+
 
         echo $response;
     }
