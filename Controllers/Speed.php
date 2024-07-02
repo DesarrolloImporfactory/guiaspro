@@ -1,6 +1,5 @@
 <?
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+
 class Speed extends Controller
 {
     public function __construct()
@@ -37,6 +36,25 @@ class Speed extends Controller
         $observacion = $_POST['observacion'] ?? "";
 
         $monto_factura = $_POST['monto_factura'];
+
+        echo $nombreO;
+        echo $ciudadO;
+        echo $direccionO;
+        echo $telefonoO;
+        echo $referenciaO;
+        echo $nombre;
+        echo $ciudad;
+        echo $direccion;
+        echo $telefono;
+        echo $referencia;
+        echo $contiene;
+        echo $fecha;
+        echo $numero_factura;
+        echo $url;
+        echo $recuado;
+        echo $observacion;
+        echo $monto_factura;
+
 
 
         $response = $this->model->crear($nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $recuado, $observacion, $monto_factura);
