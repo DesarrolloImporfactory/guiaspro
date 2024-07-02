@@ -199,16 +199,28 @@ class SpeedModel extends Query
                         <span>Valor asegurado: $0.00</span>
                     
                     </div>
+        ';
+        if ($data['recaudo'] == '1') {
 
-                    <div class="ticket-section text-center">
-                        <br> <span class="bold">VALOR A COBRAR $' . $data["monto_factura"] . '</span><br>        
-                    </div>
+            $recaudado = '
+            <div class="ticket-section text-center">
+            <br> <span class="bold">VALOR A COBRAR $' . $data["monto_factura"] . '</span><br>        
+            </div>
+            ';
+        } else {
+            $recaudado = ' <div class="ticket-section text-center">
+            <br> <span class="bold">GUIA SIN RECAUDO</span><br>        
+            </div>';
+        }
 
+        $final = '
                 </div>
             </body>
 
         </html>
         ';
+
+        $guia = $guia . $recaudado . $final;
 
         $sql = "INSERT INTO `visor`(`html`, `guia`) VALUES (?,?)";
         $data = [$html, $guia];
