@@ -31,6 +31,7 @@ class Servientrega extends Controller
     }
     public function Anular($id)
     {
+        
         //verificar id sea numerico}
         if (is_numeric($id)) {
             $this->model->anularGuia($id);
