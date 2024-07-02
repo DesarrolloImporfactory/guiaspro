@@ -13,26 +13,26 @@ class Speed extends Controller
 
     public function crear()
     {
-        $nombreO = $_POST['nombreO'];
-        $ciudadO = $_POST['ciudadO'];
-        $direccionO = $_POST['direccionO'];
-        $telefonoO = $_POST['telefonoO'];
-        $referenciaO = $_POST['referenciaO'];
+        $nombreO = $_POST['nombreO'] ?? "";
+        $ciudadO = $_POST['ciudadO'] ?? "";
+        $direccionO = $_POST['direccionO'] ?? "";
+        $telefonoO = $_POST['telefonoO'] ?? "";
+        $referenciaO = $_POST['referenciaO'] ?? "";
 
-        $nombre = $_POST['nombre'];
-        $ciudad = $_POST['ciudad'];
-        $direccion = $_POST['direccion'];
-        $telefono = $_POST['telefono'];
-        $referencia = $_POST['referenciaD'];
+        $nombre = $_POST['nombre'] ?? "";
+        $ciudad = $_POST['ciudad'] ?? "";
+        $direccion = $_POST['direccion'] ?? "";
+        $telefono = $_POST['telefono'] ?? "";
+        $referencia = $_POST['referenciaD'] ?? "";
 
 
-        $contiene = $_POST['contiene'];
-        $fecha = $_POST['fecha'];
-        $numero_factura = $_POST['numero_factura'];
-        $url = $_POST['url'];
+        $contiene = $_POST['contiene'] ?? "";
+        $fecha = $_POST['fecha'] ?? "";
+        $numero_factura = $_POST['numero_factura'] ?? "";
+        $url = $_POST['url'] ?? "";
 
-        $recuado = $_POST['recaudo'];
-        $observacion = $_POST['observacion'];
+        $recuado = $_POST['recaudo']    ?? "";
+        $observacion = $_POST['observacion'] ?? "";
 
         $monto_factura = $_POST['monto_factura'];
 
