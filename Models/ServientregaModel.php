@@ -126,7 +126,6 @@ class ServientregaModel extends Query
         $this->cambioDeEstado($id, "101");
 
         if ($response['msj']!='LA GUÍA NO PUEDE SER ANULADA, PORQUE ESTA SIENDO PROCESADA'){
-                          
         $sql = "UPDATE facturas_cot SET anulada = 1 WHERE numero_guia = '$id'";
         $result = mysqli_query($this->market, $sql);
         $sql = "DELETE FROM cabecera_cuenta_pagar WHERE guia = '$id'";
