@@ -15,7 +15,7 @@ class Speed extends Controller
     public function crear()
     {
 
-        echo "XD";
+
         $nombreO = $_POST['nombreO'];
         $ciudadO = $_POST['ciudadO'];
         $direccionO = $_POST['direccionO'];
@@ -38,25 +38,6 @@ class Speed extends Controller
         $observacion = $_POST['observacion'];
 
         $monto_factura = $_POST['monto_factura'];
-
-        echo $nombreO;
-        echo $ciudadO;
-        echo $direccionO;
-        echo $telefonoO;
-        echo $referenciaO;
-        echo $nombre;
-        echo $ciudad;
-        echo $direccion;
-        echo $telefono;
-        echo $referencia;
-        echo $contiene;
-        echo $fecha;
-        echo $numero_factura;
-        echo $url;
-        echo $recuado;
-        echo $observacion;
-        echo $monto_factura;
-
 
 
         $response = $this->model->crear($nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $recuado, $observacion, $monto_factura);
