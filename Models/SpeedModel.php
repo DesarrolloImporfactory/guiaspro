@@ -222,7 +222,7 @@ class SpeedModel extends Query
         </html>
         ';
 
-        $guia = $guia . $recaudado . $final;
+        $html = $html . $recaudado . $final;
 
         $sql = "INSERT INTO `visor`(`html`, `guia`) VALUES (?,?)";
         $data = [$html, $guia];
