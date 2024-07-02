@@ -182,7 +182,7 @@ class SpeedModel extends Query
 
                     <div class="ticket-section">
                     <span class="bold">DESTINO: ' . $data["nombre_destino"] . '</span> <br> 
-                        <span> ' . $data["direccion_destino"] . $data["referencia_destino"] . '</span><br>
+                        <span> ' . $data["direccion_destino"] . ', ' . $data["referencia_destino"] . '</span><br>
                         <span class="bold">TEL: ' . $data["telefono_destino"] . '</span>
                     
                     </div>
