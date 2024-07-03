@@ -16,7 +16,7 @@ class GintracomModel extends Query
     {
         //  $data = json_decode($data, true);
         echo $datas;
-        $query = "INSERT INTO gintracom_webhook (json) VALUES (?)";
+        $query = "INSERT INTO gintracom_webhook (valor) VALUES (?)";
         $data = array($datas);
         $this->insert($query, $data);
         //
