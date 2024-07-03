@@ -71,9 +71,10 @@ class ServientregaModel extends Query
 
         $cas = json_encode($data);
 
-        $sql = "INSERT INTO test (cas) VALUES (?)";
+        $sql = "INSERT INTO test (cas) VALUES ($cas)";
         $datas = array($cas);
-        $this->insert($sql, $datas);
+
+        $respuesta = mysqli_query($this->market, $sql);
 
         /*  $data = json_decode($data,true);  */
         //la fecha llega asi: "fecha_movimiento_novedad": "2024-04-24 12:03:10"
@@ -123,91 +124,14 @@ class ServientregaModel extends Query
         // Cerrar la sesión cURL
         curl_close($ch);
         echo $response;
-          if ($response['msj']!='LA GUÍA NO PUEDE SER ANULADA, PORQUE ESTA SIENDO PROCESADA'){
-        $this->cambioDeEstado($id, "101");
-  
-        $sql = "UPDATE facturas_cot SET anulada = 1 WHERE numero_guia = '$id'";
-        $result = mysqli_query($this->market, $sql);
-        $sql = "DELETE FROM cabecera_cuenta_pagar WHERE guia = '$id'";
-        $result = mysqli_query($this->market, $sql);
+        if ($response['msj'] != 'LA GUÍA NO PUEDE SER ANULADA, PORQUE ESTA SIENDO PROCESADA') {
+            $this->cambioDeEstado($id, "101");
+
+            $sql = "UPDATE facturas_cot SET anulada = 1 WHERE numero_guia = '$id'";
+            $result = mysqli_query($this->market, $sql);
+            $sql = "DELETE FROM cabecera_cuenta_pagar WHERE guia = '$id'";
+            $result = mysqli_query($this->market, $sql);
         }
-        
-    }
-
-    private function enviar_waller($data, $guia)
-    {
-        $data = array(
-            "noGuia" => $guia, // Asegúrate de que $guia contiene el valor correcto
-            "estadoActual" => "Entregado", // Corrige el typo "Entragado"
-            "estadoActualCodigo" => 7, // Asegúrate de que esto es un número, no un string
-            "novedades" => array(
-                array(
-                    "codigoTipoNovedad" => 43,
-                    "nombreTipoNovedad" => "CONFIRMADO",
-                    "codigoDetalleNovedad" => 134,
-                    "nombreDetalleNovedad" => "Confirmacion de Guía arribada",
-                    "numeroMaximo" => 1,
-                    "observacion" => "Guia Grabada Desde Celular",
-                    "fechaNovedad" => "2020-12-04T13:42:35"
-                )
-            )
-        );
-        $data_string = json_encode($data);
-
-        $url = "https://marketplace.imporsuit.com/sysadmin/api/integracion/Laar/";
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string)
-        ));
-        $response = curl_exec($ch);
-        curl_close($ch);
-        echo $response;
-    }
-    private function enviar_waller2($data, $guia)
-    {
-        $data = array(
-            "noGuia" => $guia, // Asegúrate de que $guia contiene el valor correcto
-            "estadoActual" => "Entregado", // Corrige el typo "Entragado"
-            "estadoActualCodigo" => 9, // Asegúrate de que esto es un número, no un string
-            "novedades" => array(
-                array(
-                    "codigoTipoNovedad" => 42,
-                    "nombreTipoNovedad" => "DEVOLUCION",
-                    "codigoDetalleNovedad" => 134,
-                    "nombreDetalleNovedad" => "Confirmacion de Guía arribada",
-                    "numeroMaximo" => 1,
-                    "observacion" => "Guia Grabada Desde Celular",
-                    "fechaNovedad" => "2020-12-04T13:42:35"
-                ),
-                array(
-                    "codigoTipoNovedad" => 96,
-                    "nombreTipoNovedad" => "DEVOLUCION",
-                    "codigoDetalleNovedad" => 134,
-                    "nombreDetalleNovedad" => "Confirmacion de Guía arribada",
-                    "numeroMaximo" => 1,
-                    "observacion" => "Guia Grabada Desde Celular",
-                    "fechaNovedad" => "2020-12-04T13:42:35"
-                ),
-            )
-        );
-        $data_string = json_encode($data);
-
-        $url = "https://marketplace.imporsuit.com/sysadmin/api/integracion/Laar/";
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string)
-        ));
-        $response = curl_exec($ch);
-        curl_close($ch);
-        echo $response;
     }
 
     private function cambioDeEstado($guia, $estado)
