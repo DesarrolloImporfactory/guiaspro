@@ -16,8 +16,10 @@ class GintracomModel extends Query
     {
         //  $data = json_decode($data, true);
         echo $datas;
-        $query = "INSERT INTO gintracom_webhook (valor) VALUES (?)";
+        $query = "INSERT INTO gintracom_webhook (valor) VALUES ('$datas')";
         $data = array($datas);
+        $quers = mysqli_query($this->market, $query);
+
         $this->insert($query, $data);
         //
         $datos = json_decode($datas, true);
