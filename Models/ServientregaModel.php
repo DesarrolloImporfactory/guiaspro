@@ -10,7 +10,7 @@ class ServientregaModel extends Query
         $this->market = mysqli_connect(HOSTMARKET, USERMARKET, PASSWORDMARKET, DBMARKET);
     }
 
-    public function visualizarGuia($id)
+    public function visualizarGuia($id, $nombre)
     {
         // URL del servicio web
         $url = "https://swservicli.servientrega.com.ec:5001/api/GuiaDigital/[" . $id . ",'integracion.api.1','54321']";
@@ -54,6 +54,59 @@ class ServientregaModel extends Query
         // Servir el archivo PDF
         header("Content-Type: application/pdf");
         header("Content-Disposition: attachment; filename=\"IMPORSUITPRO_" . $id . ".pdf\"");
+
+        readfile($tempPdfPath);
+
+        // Eliminar archivo temporal
+        unlink($tempPdfPath);
+
+        // Asegurarse de no enviar más salida
+        exit();
+    }
+    public function visualizarGuias($id, $nombre)
+    {
+        // URL del servicio web
+        $url = "https://swservicli.servientrega.com.ec:5001/api/GuiaDigital/[" . $id . ",'integracion.api.1','54321']";
+
+        // Inicializar cURL
+        $ch = curl_init();
+
+        // Configurar opciones de cURL
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+        // Ejecutar la solicitud y obtener la respuesta
+        $response = curl_exec($ch);
+
+        // Verificar errores
+        if (curl_errno($ch)) {
+            throw new Exception(curl_error($ch));
+        }
+
+        // Cerrar cURL
+        curl_close($ch);
+
+        // Decodificar respuesta JSON para obtener la cadena base64 del PDF
+        $responseData = json_decode($response, true);
+        $base64String = $responseData['archivoEncriptado'];
+        $pdfContent = base64_decode($base64String);
+
+        // Verificar si el contenido es PDF
+        if (strpos($pdfContent, "%PDF") !== 0) {
+            echo "El contenido descargado no es un PDF válido.";
+            return;
+        }
+
+        // Ruta temporal del archivo PDF
+        $tempPdfPath = tempnam(sys_get_temp_dir(), 'pdf');
+        file_put_contents($tempPdfPath, $pdfContent);
+
+        // Servir el archivo PDF
+        header("Content-Type: application/pdf");
+        header("Content-Disposition: attachment; filename=\"$nombre" . $id . ".pdf\"");
 
         readfile($tempPdfPath);
 
