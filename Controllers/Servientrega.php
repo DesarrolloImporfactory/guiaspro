@@ -29,16 +29,7 @@ class Servientrega extends Controller
             echo "Guia no valida";
         }
     }
-    public function Guias($id)
-    {
-        $nombre = $_POST['nombre'];
-        //verificar id sea numerico}
-        if (is_numeric($id)) {
-            $this->model->visualizarGuias($id, $nombre);
-        } else {
-            echo "Guia no valida";
-        }
-    }
+
     public function Anular($id)
     {
 

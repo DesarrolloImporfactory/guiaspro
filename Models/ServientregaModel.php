@@ -10,7 +10,7 @@ class ServientregaModel extends Query
         $this->market = mysqli_connect(HOSTMARKET, USERMARKET, PASSWORDMARKET, DBMARKET);
     }
 
-    public function visualizarGuia($id, $nombre)
+    public function visualizarGuia($id)
     {
         // URL del servicio web
         $url = "https://swservicli.servientrega.com.ec:5001/api/GuiaDigital/[" . $id . ",'integracion.api.1','54321']";
@@ -53,7 +53,7 @@ class ServientregaModel extends Query
 
         // Servir el archivo PDF
         header("Content-Type: application/pdf");
-        header("Content-Disposition: attachment; filename=\"IMPORSUITPRO_" . $id . ".pdf\"");
+        header("Content-Disposition: attachment; filename=\"SERVIENTREGA_" . $id . ".pdf\"");
 
         readfile($tempPdfPath);
 
