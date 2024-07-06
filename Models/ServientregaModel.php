@@ -264,6 +264,8 @@ class ServientregaModel extends Query
 
     public function test($data)
     {
+        echo "hola";
+
         $data = json_encode($data);
         $sql = "INSERT INTO test (cas) VALUES ($data)";
         $datas = array($data);
