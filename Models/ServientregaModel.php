@@ -261,4 +261,12 @@ class ServientregaModel extends Query
             }
         }
     }
+
+    public function test($data)
+    {
+        $cas = json_encode($data);
+        $sql = "INSERT INTO test (cas) VALUES ($cas)";
+        $datas = array($cas);
+        $respuesta = mysqli_query($this->market, $sql);
+    }
 }

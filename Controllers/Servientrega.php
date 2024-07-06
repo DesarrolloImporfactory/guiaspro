@@ -10,8 +10,8 @@ class Servientrega extends Controller
 
     public function index()
     {
-
         $data = json_decode(file_get_contents("php://input"), true);
+        $this->model->test($data);
         if (!empty($data)) {
             $this->model->actualizar_guia($data);
         } else {
