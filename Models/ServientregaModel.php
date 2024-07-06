@@ -270,5 +270,6 @@ class ServientregaModel extends Query
         $sql = "INSERT INTO test (cas) VALUES ($data)";
         $datas = array($data);
         $respuesta = mysqli_query($this->market, $sql);
+        echo mysqli_error($this->market);
     }
 }
