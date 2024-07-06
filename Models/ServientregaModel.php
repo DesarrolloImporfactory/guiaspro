@@ -264,6 +264,7 @@ class ServientregaModel extends Query
 
     public function test($data)
     {
+        $data = json_encode($data);
         $sql = "INSERT INTO test (cas) VALUES ($data)";
         $datas = array($data);
         $respuesta = mysqli_query($this->market, $sql);
