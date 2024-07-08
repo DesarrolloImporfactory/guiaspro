@@ -193,6 +193,8 @@ class ServientregaModel extends Query
         $sql_update = "UPDATE facturas_cot SET estado_guia_sistema = '$estado' WHERE numero_guia = '$guia'";
         $result_update = mysqli_query($this->market, $sql_update);
 
+        $sql_update = "UPDATE cabecera_cuenta_pagar SET estado = '$estado' WHERE guia = '$guia'";
+
         if ($result_update) {
             return true;
         } else {
