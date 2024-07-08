@@ -283,4 +283,23 @@ class ServientregaModel extends Query
         $respuesta = mysqli_query($this->market, $sql);
         echo mysqli_error($this->market);
     }
+
+    public function masivo()
+    {
+        $sql = "SELECT * FROM test";
+        $data = mysqli_query($this->market, $sql);
+        $data = mysqli_fetch_all($data, MYSQLI_ASSOC);
+
+        foreach ($data as $key => $value) {
+            $curl = curl_init();
+            $url = "https://guias.imporsuitpro.com/Servientrega";
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $value);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($curl);
+            curl_close($curl);
+            echo $response;
+        }
+    }
 }

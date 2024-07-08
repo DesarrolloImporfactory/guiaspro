@@ -40,4 +40,9 @@ class Servientrega extends Controller
             echo "Guia no valida";
         }
     }
+
+    public function masivo()
+    {
+        $this->model->masivo();
+    }
 }
