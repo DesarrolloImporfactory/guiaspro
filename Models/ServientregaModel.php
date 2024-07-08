@@ -296,7 +296,7 @@ class ServientregaModel extends Query
             $url = "https://guias.imporsuitpro.com/Servientrega";
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $value["cas"]);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($value["cas"]));
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             $response = curl_exec($curl);
             curl_close($curl);
