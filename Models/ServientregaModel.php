@@ -38,7 +38,7 @@ class ServientregaModel extends Query
 
         // Decodificar respuesta JSON para obtener la cadena base64 del PDF
         $responseData = json_decode($response, true);
-        print_r($responseData);
+        // print_r($responseData);
         $base64String = $responseData['archivoEncriptado'];
         $pdfContent = base64_decode($base64String);
 
