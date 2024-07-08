@@ -291,7 +291,7 @@ class ServientregaModel extends Query
         $data = mysqli_fetch_all($data, MYSQLI_ASSOC);
 
         foreach ($data as $key => $value) {
-
+            echo $value["cas"];
             $curl = curl_init();
             $url = "https://guias.imporsuitpro.com/Servientrega";
             curl_setopt($curl, CURLOPT_URL, $url);
