@@ -1,37 +1,33 @@
 <?php
 class LaarModel extends Query
 {
+    private $market;
+    public function __construct()
+    {
+        parent::__construct();
+        $this->market = mysqli_connect(HOSTMARKET, USERMARKET, PASSWORDMARKET, DBMARKET);
+    }
+
     public function capturador($json)
     {
-        $this->insert("INSERT INTO laar (json) VALUES (?)", [$json]);
+        $sql = "INSERT INTO laar (json) VALUES ($json)";
+        $response =  mysqli_query($this->market, $sql);
     }
 
     public function actualizarEstado($estado, $guia)
     {
         $sql = "UPDATE facturas_cot set estado_guia_sistema = '$estado' WHERE numero_guia = '$guia' ";
-        $response =  $this->select($sql);
+        $response =  mysqli_query($this->market, $sql);
         $update = "UPDATE cabecera_cuenta_pagar set estado_guia = '$estado' WHERE guia = '$guia' ";
-        $response =  $this->select($update);
-    }
-
-    public function entregada($estado, $guia)
-    {
-        $datos = "SELECT * FROM facturas_cot WHERE numero_guia = '$guia' ";
-        $select = $this->select($datos);
-        $data_factura = $select[0];
-    }
-
-    public function EnviarWalletEntrega($estado, $guia)
-    {
-        $datos = "SELECT * FROM facturas_cot WHERE numero_guia = '$guia' ";
-        $select = $this->select($datos);
+        $response =  mysqli_query($this->market, $update);
     }
 
     public function notificar($novedades, $guia)
     {
-        $id_plataforma = $this->select("SELECT id_plataforma FROM facturas_cot WHERE numero_guia = '$guia' ")[0]['id_plataforma'];
-        echo $id_plataforma;
-
+        $sql = "SELECT id_plataforma FROM facturas_cot WHERE numero_guia = '$guia' ";
+        $response = mysqli_query($this->market, $sql);
+        $data = mysqli_fetch_assoc($response);
+        $id_plataforma = $data['id_plataforma'];
 
         $avisar = false;
         $nombre = "";
@@ -42,7 +38,8 @@ class LaarModel extends Query
             }
 
             $sql = "SELECT * FROM detalle_novedad WHERE guia_novedad = '$guia' AND codigo_novedad = '" . $novedad['codigoTipoNovedad'] . "' ";
-            $response = $this->select($sql);
+            $response = mysqli_query($this->market, $sql);
+            $response = mysqli_fetch_assoc($response);
             print_r($response);
 
             if (count($response) == 0) {
@@ -53,15 +50,16 @@ class LaarModel extends Query
                 $nombre = $novedad['nombreDetalleNovedad'];
                 $detalle = $novedad['nombreTipoNovedad'];
                 $observacion = $novedad['observacion'];
-
-                $response = $this->insert("INSERT INTO detalle_novedad (codigo_novedad, guia_novedad, nombre_novedad, detalle_novedad, observacion, id_plataforma) VALUES (?, ?, ?, ?, ?, ?)", [$codigo, $guia, $nombre, $detalle, $observacion, $id_plataforma]);
-                print_r($response);
             }
+            $sql = "INSERT INTO detalle_novedad (codigo_novedad, guia_novedad, nombre_novedad, detalle_novedad, observacion, id_plataforma) VALUES ('$codigo', '$guia', '$nombre', '$detalle', '$observacion', '$id_plataforma')";
+            $response = mysqli_query($this->market, $sql);
+
+            print_r($response);
         }
+
         echo $avisar;
         if ($avisar) {
 
-            $sql = "INSERT INTO novedades (guia_novedad, cliente_novedad, estado_novedad, novedad, tracking, fecha, id_plataforma) VALUES (?, ?, ?, ?, ?, ?, ?)";
             if (strpos($guia, 'IMP') == 0) {
                 $tracking = "https://fenix.laarcourier.com/Tracking/Guiacompleta.aspx?guia=" . $guia;
             } else if (strpos($guia, 'I00') == 0) {
@@ -69,7 +67,9 @@ class LaarModel extends Query
             } else if (is_numeric($guia)) {
                 $tracking = "https://www.servientrega.com.ec/Tracking/?guia=" . $guia . "&tipo=GUI";
             }
-            $response = $this->insert($sql, [$guia, $nombre, $codigo, $nombre, $tracking, $novedad["fechaNovedad"], $id_plataforma]);
+            $sql = "INSERT INTO novedades (guia_novedad, cliente_novedad, estado_novedad, novedad, tracking, fecha, id_plataforma) VALUES ('$guia', '$nombre', '$codigo', '$nombre', '$tracking', '" . $novedad["fechaNovedad"] . "', '$id_plataforma')";
+            $response = mysqli_query($this->market, $sql);
+            $response = mysqli_fetch_assoc($response);
             print_r($response);
             if ($avisar) {
                 //$this->enviarCorreo($guia);
