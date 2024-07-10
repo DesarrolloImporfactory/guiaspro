@@ -14,8 +14,6 @@ class Speed extends Controller
 
     public function crear()
     {
-
-
         $nombreO = $_POST['nombreO'];
         $ciudadO = $_POST['ciudadO'];
         $direccionO = $_POST['direccionO'];
