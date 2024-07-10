@@ -148,7 +148,7 @@ class ServientregaModel extends Query
         $this->insert($sql, $data1);
 
         $this->cambioDeEstado($guia, $movimiento);
-        if ($movimiento >= "318" && $movimiento <= "351") {
+        if ($movimiento >= "320" && $movimiento <= "351") {
             $this->gestionarNovedad($data, $guia);
         }
 
