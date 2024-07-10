@@ -20,8 +20,8 @@ class GintracomModel extends Query
         $data = array($datas);
         $quers = mysqli_query($this->market, $query);
 
-        $this->insert($query, $data);
-        //
+        /*         $this->insert($query, $data);
+ */        //
         $datos = json_decode($datas, true);
         if (isset($datos["data"]) && is_array($datos["data"])) {
             foreach ($datos["data"] as $dato) {
