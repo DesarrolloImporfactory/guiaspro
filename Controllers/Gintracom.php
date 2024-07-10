@@ -50,4 +50,9 @@ class Gintracom extends Controller
             echo "Error: No se recibieron datos";
         }
     }
+
+    public function masivo()
+    {
+        $this->model->masivo();
+    }
 }

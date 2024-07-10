@@ -21,7 +21,7 @@ class GintracomModel extends Query
         $quers = mysqli_query($this->market, $query);
 
         /*         $this->insert($query, $data);
- */        //
+         */        //
         $datos = json_decode($datas, true);
         if (isset($datos["data"]) && is_array($datos["data"])) {
             foreach ($datos["data"] as $dato) {
@@ -135,5 +135,15 @@ class GintracomModel extends Query
         }
 
         return $response;
+    }
+
+    public function masivo()
+    {
+        $sql = "SELECT * FROM gintracom_webhook";
+        $data = mysqli_query($this->market, $sql);
+        $data = mysqli_fetch_all($data, MYSQLI_ASSOC);
+        foreach ($data as $dato) {
+            $this->webhook($dato["valor"]);
+        }
     }
 }
