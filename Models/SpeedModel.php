@@ -269,6 +269,8 @@ class SpeedModel extends Query
 
         $sql = "DELETE FROM cabecera_cuenta_pagar WHERE guia = '$guia'";
         $delete = mysqli_query($this->market, $sql);
+
+        return ["status" => 200, "message" => "Guia anulada"];
     }
 
     public function estado($guia, $estado)
