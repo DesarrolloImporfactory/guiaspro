@@ -276,12 +276,10 @@ class SpeedModel extends Query
         $sql = "UPDATE guias_speed SET estado = ? WHERE guia = ?";
         $update = $this->update($sql, [$estado, $guia]);
 
-        $sql = "UPDATE facturas_cot SET estado_guia_sistema = ? WHERE numero_guia = ?";
+        $sql = "UPDATE facturas_cot SET estado_guia_sistema = $estado WHERE numero_guia = '$guia'";
         $update = mysqli_query($this->market, $sql);
 
-        $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = ? WHERE guia = ?";
+        $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = $estado WHERE guia = '$guia' ";
         $update = mysqli_query($this->market, $sql);
-
-        return ["status" => 200, "message" => "Estado actualizado"];
     }
 }
