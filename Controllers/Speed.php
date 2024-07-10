@@ -55,4 +55,11 @@ class Speed extends Controller
         $response = $this->model->anular($guia);
         echo json_encode($response);
     }
+
+    public function estado($guia)
+    {
+        $estado = $_POST['estado'];
+        $response = $this->model->estado($guia, $estado);
+        echo json_encode($response);
+    }
 }

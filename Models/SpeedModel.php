@@ -270,4 +270,13 @@ class SpeedModel extends Query
         $sql = "DELETE FROM cabecera_cuenta_pagar WHERE guia = '$guia'";
         $delete = mysqli_query($this->market, $sql);
     }
+
+    public function estado($guia, $estado)
+    {
+        $sql = "UPDATE guias_speed SET estado = ? WHERE guia = ?";
+        $update = $this->update($sql, [$estado, $guia]);
+
+        $sql = "UPDATE facturas_cot SET estado_guia_sistema = ? WHERE numero_guia = ?";
+        $update = mysqli_query($this->market, $sql);
+    }
 }
