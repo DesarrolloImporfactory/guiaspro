@@ -144,6 +144,8 @@ class GintracomModel extends Query
         $data = mysqli_fetch_all($data, MYSQLI_ASSOC);
         foreach ($data as $dato) {
             $this->webhook($dato["valor"]);
+            //cada 2 segundos
+            sleep(2);
         }
     }
 }
