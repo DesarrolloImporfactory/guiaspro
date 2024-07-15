@@ -1,9 +1,41 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
+require 'vendor/autoload.php';
+
+use setasign\Fpdi\Tcpdf\Fpdi;
+
+class PDF extends Fpdi
+{
+    private $contenido;
+
+    public function __construct($orientation, $unit, $size, $unicode, $encoding, $diskcache, $contenido)
+    {
+        parent::__construct($orientation, $unit, $size, $unicode, $encoding, $diskcache);
+        $this->contenido = $contenido;
+    }
+
+    public function Header()
+    {
+        // Add a table at the beginning of the document
+        $this->SetFont('helvetica', '', 6);
+        $tbl = '<table cellspacing="0" cellpadding="1" border="1">
+                    <tr>
+                        <th><strong>CONTENIDO:</strong></th>
+                    </tr>
+                    <tr>
+                        <td>' . $this->contenido . '</td>
+                    </tr>
+                </table>';
+        $this->writeHTML($tbl, true, false, false, false, '');
+        $this->SetY($this->GetY() + 10); // Adjust Y position for the rest of the document content
+    }
+}
+
 class ServientregaModel extends Query
 {
     private $market;
+
     public function __construct()
     {
         parent::__construct();
@@ -12,12 +44,12 @@ class ServientregaModel extends Query
 
     public function visualizarGuia($id)
     {
-        //obtener contenido de la guia
+        // Obtener contenido de la guia
         $sql = "SELECT * FROM facturas_cot WHERE numero_guia = '$id'";
         $result = mysqli_query($this->market, $sql);
         $row = mysqli_fetch_assoc($result);
-        $contenido = $row['contenido'];
 
+        $contenido = $row['contiene'];
 
         // URL del servicio web
         $url = "https://swservicli.servientrega.com.ec:5001/api/GuiaDigital/[" . $id . ",'integracion.api.1','54321']";
@@ -45,7 +77,6 @@ class ServientregaModel extends Query
 
         // Decodificar respuesta JSON para obtener la cadena base64 del PDF
         $responseData = json_decode($response, true);
-        // print_r($responseData);
         $base64String = $responseData['archivoEncriptado'];
         $pdfContent = base64_decode($base64String);
 
@@ -59,18 +90,26 @@ class ServientregaModel extends Query
         $tempPdfPath = tempnam(sys_get_temp_dir(), 'pdf');
         file_put_contents($tempPdfPath, $pdfContent);
 
-        // Servir el archivo PDF
-        header("Content-Type: application/pdf");
-        header("Content-Disposition: attachment; filename=\"SERVIENTREGA_" . $id . ".pdf\"");
+        // Crear nuevo documento PDF con tamaño personalizado de 100 x 148 mm
+        $pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, [100, 148], true, 'UTF-8', false, $contenido);
 
-        readfile($tempPdfPath);
+        // Agregar una página
+        $pdf->AddPage();
+
+        // Importar el PDF existente descargado
+        $pdf->setSourceFile($tempPdfPath);
+        $tplId = $pdf->importPage(1);
+
+        // Ajustar la posición y el tamaño de la página importada para que se ajuste debajo de la tabla
+        $pdf->useTemplate($tplId, 5, 0, 90); // Ajustar la posición X, Y y el tamaño según sea necesario
+
+        // Salida del nuevo PDF
+        $pdf->Output('SERVIENTREGA_' . $id . '.pdf', 'I');
 
         // Eliminar archivo temporal
         unlink($tempPdfPath);
-
-        // Asegurarse de no enviar más salida
-        exit();
     }
+
     public function visualizarGuias($id, $nombre)
     {
         // URL del servicio web
