@@ -2,6 +2,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
+require 'vendor/autoload.php';
+
 use setasign\Fpdi\Tcpdf\Fpdi;
 
 class PDF extends Fpdi
@@ -79,9 +81,13 @@ class ServientregaModel extends Query
         $tempPdfPath = tempnam(sys_get_temp_dir(), 'pdf');
         file_put_contents($tempPdfPath, $pdfContent);
 
-        // Crear una nueva instancia de PDF con FPDI y TCPDF
-        require 'vendor/autoload.php';
+        // Verificar que el archivo PDF temporal sea válido
+        if (!file_exists($tempPdfPath) || filesize($tempPdfPath) == 0) {
+            echo "El archivo PDF temporal no es válido.";
+            return;
+        }
 
+        // Crear una nueva instancia de PDF con FPDI y TCPDF
 
         // Crear un nuevo documento PDF con tamaño personalizado 100 x 148 mm
         $pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, [100, 148], true, 'UTF-8', false);
@@ -94,7 +100,7 @@ class ServientregaModel extends Query
         $tplId = $pdf->importPage(1);
 
         // Ajustar la posición y el tamaño de la página importada para que encaje debajo de la tabla
-        $pdf->useTemplate($tplId, 5, -5, 90); // Ajustar la posición X, Y y el tamaño según sea necesario
+        $pdf->useTemplate($tplId, 5, 20, 90); // Ajustar la posición X, Y y el tamaño según sea necesario
 
         // Servir el archivo PDF modificado
         header("Content-Type: application/pdf");
