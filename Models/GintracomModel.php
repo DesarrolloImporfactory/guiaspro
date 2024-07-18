@@ -82,7 +82,7 @@ class GintracomModel extends Query
         file_put_contents($server_url, $response);
         //abrir el archivo
         header("Content-type: application/pdf");
-        header("Content-Disposition: attachment; filename=\"IMPORSUITPRO_GINTRACOM" . $id . ".pdf\"");
+        header("Content-Disposition: attachment; filename=\"GINTRACOM" . $id . ".pdf\"");
         readfile($server_url);
     }
     public function anular($id)
