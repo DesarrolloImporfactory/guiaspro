@@ -79,7 +79,9 @@ class GintracomModel extends Query
         $response = $this->enviar_datos($url, $id);
         $server_url =  "../temp2.pdf";
 
-        file_put_contents($server_url, $response);
+       $variable= file_put_contents($server_url, $response);
+       print_r($variable);
+        
         //abrir el archivo
         header("Content-type: application/pdf");
         header("Content-Disposition: attachment; filename=\"GINTRACOM" . $id . ".pdf\"");
@@ -90,7 +92,7 @@ class GintracomModel extends Query
         $url = "https://ec.gintracom.site/web/import-suite/anular";
         $response = $this->enviar_datos($url, $id);
         
-        print_r($response);
+       
         $sql = "UPDATE facturas_cot SET estado_guia_sistema = '12', anulada =1 WHERE  numero_guia = '" . $id . "'";
         $response = mysqli_query($this->market, $sql);
 
