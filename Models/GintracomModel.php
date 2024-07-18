@@ -83,9 +83,9 @@ class GintracomModel extends Query
        print_r($variable);
         
         //abrir el archivo
-        header("Content-type: application/pdf");
-        header("Content-Disposition: attachment; filename=\"GINTRACOM" . $id . ".pdf\"");
-        readfile($server_url);
+      //  header("Content-type: application/pdf");
+       // header("Content-Disposition: attachment; filename=\"GINTRACOM" . $id . ".pdf\"");
+       // readfile($server_url);
     }
     public function anular($id)
     {
