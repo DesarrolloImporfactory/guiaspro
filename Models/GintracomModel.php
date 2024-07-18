@@ -77,15 +77,15 @@ class GintracomModel extends Query
     {
         $url = "https://ec.gintracom.site/web/import-suite/label";
         $response = $this->enviar_datos($url, $id);
-        $server_url =  "../temp2.pdf";
+        $server_url =  "../temp21.pdf";
 
-       $variable= file_put_contents($server_url, $response);
-       print_r($variable);
+        file_put_contents($server_url, $response);
+        
         
         //abrir el archivo
-      //  header("Content-type: application/pdf");
-       // header("Content-Disposition: attachment; filename=\"GINTRACOM" . $id . ".pdf\"");
-       // readfile($server_url);
+        header("Content-type: application/pdf");
+        header("Content-Disposition: attachment; filename=\"GINTRACOM" . $id . ".pdf\"");
+        readfile($server_url);
     }
     public function anular($id)
     {
