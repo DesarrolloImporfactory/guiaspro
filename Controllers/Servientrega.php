@@ -45,4 +45,9 @@ class Servientrega extends Controller
     {
         $this->model->masivo();
     }
+
+    public function obtenerValorPendiente()
+    {
+        echo $this->model->obtenerValorPendiente();
+    }
 }
