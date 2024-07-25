@@ -247,8 +247,11 @@ class ServientregaModel extends Query
 
         $sql_update = "UPDATE cabecera_cuenta_pagar SET estado_guia = '$estado' WHERE guia = '$guia'";
         if ($estado == 9) {
-            $sql_update = "UPDATE cabecera_cuenta_pagar SET valor_pendiente =  ((precio_envio + full) * -1), monto_recibir =  ((precio_envio + full) * -1) WHERE guia = '$guia'";
-            $result_update = mysqli_query($this->market, $sql_update);
+            $valor_pendiente = $this->obtenerValorPendiente($guia);
+            if ($valor_pendiente != 0) {
+                $sql_update = "UPDATE cabecera_cuenta_pagar SET valor_pendiente =  ((precio_envio + full) * -1), monto_recibir =  ((precio_envio + full) * -1) WHERE guia = '$guia'";
+                $result_update = mysqli_query($this->market, $sql_update);
+            }
         }
         $result_update = mysqli_query($this->market, $sql_update);
 
