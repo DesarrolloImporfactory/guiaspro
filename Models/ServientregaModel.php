@@ -260,6 +260,14 @@ class ServientregaModel extends Query
         }
     }
 
+    public function obtenerValorPendiente($guia)
+    {
+        $sql = "SELECT valor_pendiente FROM cabecera_cuenta_pagar WHERE guia = '$guia'";
+        $result = mysqli_query($this->market, $sql);
+        $row = mysqli_fetch_assoc($result);
+        return $row['valor_pendiente'];
+    }
+
     private function gestionarNovedad($guia, $laar)
     {
         print_r($guia);
