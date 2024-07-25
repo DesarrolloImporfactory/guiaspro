@@ -48,6 +48,7 @@ class Servientrega extends Controller
 
     public function obtenerValorPendiente()
     {
-        echo $this->model->obtenerValorPendiente();
+        $guia = $_POST['guia'];
+        echo $this->model->obtenerValorPendiente($guia);
     }
 }
