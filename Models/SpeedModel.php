@@ -288,6 +288,34 @@ class SpeedModel extends Query
             $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = 9, monto_recibir = ((precio_envio + full) * -1), valor_pendiente =  ((precio_envio + full) * -1) WHERE guia = '$guia' ";
             $update = mysqli_query($this->market, $sql);
         }
+        if ($estado > 2) {
+            $sql = "SELECT * FROM facturas_cot WHERE numero_guia = '$guia'";
+            $data = mysqli_query($this->market, $sql);
+            $data = mysqli_fetch_assoc($data);
+
+            if ($data) {
+                $id_plataforma = $data['id_plataforma'];
+                $sql = "SELECT * FROM plataformas WHERE id_plataforma = '$id_plataforma'";
+                $data = mysqli_query($this->market, $sql);
+                $data = mysqli_fetch_assoc($data);
+
+                if ($data) {
+                    $refiere = $data['refiere'] ?? null;
+                    if (!empty($refiere)) {
+                        $sql = "SELECT 1 FROM cabecera_cuenta_referidos WHERE guia = '$guia' AND id_plataforma = '$refiere'";
+                        $exists = mysqli_query($this->market, $sql);
+
+                        if (mysqli_num_rows($exists) == 0) {
+                            $sql = "REPLACE INTO cabecera_cuenta_referidos (`guia`, `monto`, `fecha`, `id_plataforma`) VALUES ('$guia', 0.3, NOW(), '$refiere')";
+                            $data = mysqli_query($this->market, $sql);
+                        }
+                    }
+                }
+            }
+        }
+
+
+
 
         return ["status" => 200, "message" => "Estado actualizado"];
     }
