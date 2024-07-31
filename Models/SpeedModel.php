@@ -310,6 +310,12 @@ class SpeedModel extends Query
                             $data = mysqli_query($this->market, $sql);
                             $sql = "UPDATE billetera_referidos SET saldo = saldo + 0.3 WHERE id_plataforma = '$refiere'";
                             $data = mysqli_query($this->market, $sql);
+                            $sql = "SELECT * FROM billetera_referidos WHERE id_plataforma = '$refiere'";
+                            $data = mysqli_query($this->market, $sql);
+                            $data = mysqli_fetch_assoc($data);
+                            $id_billetera = $data['id_billetera'];
+                            $sql = "INSERT INTO historial_referidos (id_billetera, motivo, monto, previo, fecha) VALUES ('$id_billetera', 'Referido por guia $guia', 0.3, '" . $data['saldo'] . "', NOW())";
+                            $data = mysqli_query($this->market, $sql);
                         }
                     }
                 }
