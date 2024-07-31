@@ -273,6 +273,8 @@ class ServientregaModel extends Query
                         if (mysqli_num_rows($exists) == 0) {
                             $sql = "REPLACE INTO cabecera_cuenta_referidos (`guia`, `monto`, `fecha`, `id_plataforma`) VALUES ('$guia', 0.3, NOW(), '$refiere')";
                             $data = mysqli_query($this->market, $sql);
+                            $sql = "UPDATE billetera_referidos SET saldo = saldo + 0.3 WHERE id_plataforma = '$refiere'";
+                            $data = mysqli_query($this->market, $sql);
                         }
                     }
                 }
