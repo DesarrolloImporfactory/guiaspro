@@ -37,8 +37,9 @@ class Speed extends Controller
 
         $monto_factura = $_POST['monto_factura'];
 
+        $matriz = $_POST['matriz'] ?? null;
 
-        $response = $this->model->crear($nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $recuado, $observacion, $monto_factura);
+        $response = $this->model->crear($nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $recuado, $observacion, $monto_factura, $matriz);
         echo json_encode($response);
     }
 

@@ -15,9 +15,9 @@ class SpeedModel extends Query
         $this->market = mysqli_connect(HOSTMARKET, USERMARKET, PASSWORDMARKET, DBMARKET);
     }
 
-    public function crear($nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $recaudo, $observacion, $monto_factura)
+    public function crear($nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $recaudo, $observacion, $monto_factura, $matriz)
     {
-        $guia = $this->ultimaGuia();
+        $guia = $this->ultimaGuia($matriz);
 
         $sql = "INSERT INTO guias_speed (nombre_origen, ciudad_origen, direccion_origen, telefono_origen, referencia_origen, nombre_destino, ciudad_destino, direccion_destino, telefono_destino, referencia_destino, contiene, fecha, factura, url, guia, recaudo, observacion, monto_factura) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $data = [$nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $guia, $recaudo, $observacion, $monto_factura];
@@ -27,11 +27,16 @@ class SpeedModel extends Query
         return $response;
     }
 
-    public function ultimaGuia()
+    public function ultimaGuia($matriz)
     {
-        $sql = "SELECT MAX(id_speed) AS id, MAX(guia) as guia FROM guias_speed;";
+        if ($matriz == 1) {
+            $prefix = "SPD";
+        } else if ($matriz == 2) {
+            $prefix = "MKL";
+        }
+        $sql = "SELECT MAX(id_speed) AS id, MAX(guia) as guia FROM guias_speed WHERE guia LIKE '$prefix%'";
         $data = $this->select($sql);
-        if (empty($data[0]['id'])) {
+        if (empty($data[0]['id'] && $matriz == 1)) {
             $guia = "SPD0000001";
         } else {
             $guia = $data[0]['guia'];
@@ -44,6 +49,21 @@ class SpeedModel extends Query
             $guia = (int)$guia; // Convierte la parte numérica a un entero
             $guia++; // Incrementa el valor
             $guia = "SPD" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatea el número de vuelta a una cadena
+        }
+
+        if (empty($data[0]['id'] && $matriz == 2)) {
+            $guia = "MKL0000001";
+        } else {
+            $guia = $data[0]['guia'];
+            // Verificar si $guia tiene el prefijo 'MKL'
+            if (strpos($guia, 'MKL') === 0) {
+                $guia = substr($guia, 3); // Extrae la parte numérica de la cadena
+            } else {
+                $guia = '0'; // Si no tiene el prefijo, inicia en 0
+            }
+            $guia = (int)$guia; // Convierte la parte numérica a un entero
+            $guia++; // Incrementa el valor
+            $guia = "MKL" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatea el número de vuelta a una cadena
         }
         return $guia;
     }
@@ -308,13 +328,13 @@ class SpeedModel extends Query
                         if (mysqli_num_rows($exists) == 0) {
                             $sql = "REPLACE INTO cabecera_cuenta_referidos (`guia`, `monto`, `fecha`, `id_plataforma`) VALUES ('$guia', 0.3, NOW(), '$refiere')";
                             $data = mysqli_query($this->market, $sql);
+                            $sql = "SELECT * FROM billetera_referidos WHERE id_plataforma = '$refiere'";
+                            $data2 = mysqli_query($this->market, $sql);
+                            $data2 = mysqli_fetch_assoc($data2);
                             $sql = "UPDATE billetera_referidos SET saldo = saldo + 0.3 WHERE id_plataforma = '$refiere'";
                             $data = mysqli_query($this->market, $sql);
-                            $sql = "SELECT * FROM billetera_referidos WHERE id_plataforma = '$refiere'";
-                            $data = mysqli_query($this->market, $sql);
-                            $data = mysqli_fetch_assoc($data);
-                            $id_billetera = $data['id_billetera'];
-                            $sql = "INSERT INTO historial_referidos (id_billetera, motivo, monto, previo, fecha) VALUES ('$id_billetera', 'Referido por guia $guia', 0.3, '" . $data['saldo'] . "', NOW())";
+                            $id_billetera = $data2['id_billetera'];
+                            $sql = "INSERT INTO historial_referidos (id_billetera, motivo, monto, previo, fecha) VALUES ('$id_billetera', 'Referido por guia $guia', 0.3, '" . $data2['saldo'] . "', NOW())";
                             $data = mysqli_query($this->market, $sql);
                         }
                     }
