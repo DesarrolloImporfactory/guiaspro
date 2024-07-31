@@ -23,7 +23,7 @@ class SpeedModel extends Query
         $data = [$nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $guia, $recaudo, $observacion, $monto_factura];
         $insert = $this->insert($sql, $data);
 
-        $response = $this->generarGuia($guia);
+        $response = $this->generarGuia($guia, $matriz);
         return $response;
     }
 
@@ -69,9 +69,13 @@ class SpeedModel extends Query
     }
 
 
-    public function generarGuia($guia)
+    public function generarGuia($guia, $matriz)
     {
-        $imagen = "https://tiendas.imporsuitpro.com/imgs/Speed.png";
+        if ($matriz == 1) {
+            $imagen = "https://tiendas.imporsuitpro.com/imgs/Speed.png";
+        } else if ($matriz == 2) {
+            $imagen = "https://tiendas.imporsuitpro.com/merkalogistic_letters.jpg";
+        }
 
         $sql = "SELECT * FROM guias_speed WHERE guia = '$guia'";
         $data = $this->select($sql);
