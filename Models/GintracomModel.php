@@ -32,6 +32,32 @@ class GintracomModel extends Query
                 print_r($data2);
                 //actualiza market
                 if (count($data) > 0) {
+                    if ($dato["estado"] > 2) {
+                        $sql = "SELECT * FROM facturas_cot WHERE numero_guia = '$guia'";
+                        $data = mysqli_query($this->market, $sql);
+                        $data = mysqli_fetch_assoc($data);
+
+                        if ($data) {
+                            $id_plataforma = $data['id_plataforma'];
+                            $sql = "SELECT * FROM plataformas WHERE id_plataforma = '$id_plataforma'";
+                            $data = mysqli_query($this->market, $sql);
+                            $data = mysqli_fetch_assoc($data);
+
+                            if ($data) {
+                                $refiere = $data['refiere'] ?? null;
+                                if (!empty($refiere)) {
+                                    $sql = "SELECT 1 FROM cabecera_cuenta_referidos WHERE guia = '$guia' AND id_plataforma = '$refiere'";
+                                    $exists = mysqli_query($this->market, $sql);
+
+                                    if (mysqli_num_rows($exists) == 0) {
+                                        $sql = "REPLACE INTO cabecera_cuenta_referidos (`guia`, `monto`, `fecha`, `id_plataforma`) VALUES ('$guia', 0.3, NOW(), '$refiere')";
+                                        $data = mysqli_query($this->market, $sql);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     $sql = "UPDATE facturas_cot SET estado_guia_sistema = '" . $dato["estado"] . "' WHERE numero_guia = '" . $guia . "'";
                     $response = mysqli_query($this->market, $sql);
                     $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '" . $dato["estado"] . "' WHERE guia = '" . $guia . "'";
@@ -80,8 +106,8 @@ class GintracomModel extends Query
         $server_url =  "../temp21.pdf";
 
         file_put_contents($server_url, $response);
-        
-        
+
+
         //abrir el archivo
         header("Content-type: application/pdf");
         header("Content-Disposition: attachment; filename=\"GINTRACOM" . $id . ".pdf\"");
@@ -91,8 +117,8 @@ class GintracomModel extends Query
     {
         $url = "https://ec.gintracom.site/web/import-suite/anular";
         $response = $this->enviar_datos($url, $id);
-        
-       
+
+
         $sql = "UPDATE facturas_cot SET estado_guia_sistema = '12', anulada =1 WHERE  numero_guia = '" . $id . "'";
         $response = mysqli_query($this->market, $sql);
 
