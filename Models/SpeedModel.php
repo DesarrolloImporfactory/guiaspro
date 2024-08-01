@@ -38,7 +38,7 @@ class SpeedModel extends Query
         $data = $this->select($sql);
         if (empty($data[0]['id'] && $matriz == 1)) {
             $guia = "SPD0000001";
-        } else if($matriz == 1){ {
+        } else {
             $guia = $data[0]['guia'];
             // Verificar si $guia tiene el prefijo 'SPD'
             if (strpos($guia, 'SPD') === 0) {
@@ -53,7 +53,7 @@ class SpeedModel extends Query
 
         if (empty($data[0]['id'] && $matriz == 2)) {
             $guia = "MKL0000001";
-        } else if($matriz == 2){ {
+        } else if ($matriz == 2) {
             $guia = $data[0]['guia'];
             // Verificar si $guia tiene el prefijo 'MKL'
             if (strpos($guia, 'MKL') === 0) {
