@@ -29,44 +29,58 @@ class SpeedModel extends Query
 
     public function ultimaGuia($matriz)
     {
+        // Establecer el prefijo en función de la matriz
         if ($matriz == 1) {
             $prefix = "SPD";
         } else if ($matriz == 2) {
             $prefix = "MKL";
-        }
-        $sql = "SELECT MAX(id_speed) AS id, MAX(guia) as guia FROM guias_speed WHERE guia LIKE '$prefix%'";
-        $data = $this->select($sql);
-        if (empty($data[0]['id'] && $matriz == 1)) {
-            $guia = "SPD0000001";
         } else {
-            $guia = $data[0]['guia'];
-            // Verificar si $guia tiene el prefijo 'SPD'
-            if (strpos($guia, 'SPD') === 0) {
-                $guia = substr($guia, 3); // Extrae la parte numérica de la cadena
-            } else {
-                $guia = '0'; // Si no tiene el prefijo, inicia en 0
-            }
-            $guia = (int)$guia; // Convierte la parte numérica a un entero
-            $guia++; // Incrementa el valor
-            $guia = "SPD" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatea el número de vuelta a una cadena
+            return null; // Devolver null si la matriz no es válida
         }
 
-        if (empty($data[0]['id'] && $matriz == 2)) {
-            $guia = "MKL0000001";
-        } else if ($matriz == 2) {
-            $guia = $data[0]['guia'];
-            // Verificar si $guia tiene el prefijo 'MKL'
-            if (strpos($guia, 'MKL') === 0) {
-                $guia = substr($guia, 3); // Extrae la parte numérica de la cadena
+        // Ejecutar la consulta para obtener el último ID y guía
+        $sql = "SELECT MAX(id_speed) AS id, MAX(guia) as guia FROM guias_speed WHERE guia LIKE '$prefix%'";
+        $data = $this->select($sql);
+
+        // Verificar si el resultado de la consulta está vacío para la matriz 1
+        if ($matriz == 1) {
+            if (empty($data[0]['id'])) {
+                $guia = "SPD0000001";
             } else {
-                $guia = '0'; // Si no tiene el prefijo, inicia en 0
+                $guia = $data[0]['guia'];
+                // Verificar si $guia tiene el prefijo 'SPD'
+                if (strpos($guia, 'SPD') === 0) {
+                    $guia = substr($guia, 3); // Extraer la parte numérica de la cadena
+                } else {
+                    $guia = '0'; // Si no tiene el prefijo, inicia en 0
+                }
+                $guia = (int)$guia; // Convertir la parte numérica a un entero
+                $guia++; // Incrementar el valor
+                $guia = "SPD" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatear el número de vuelta a una cadena
             }
-            $guia = (int)$guia; // Convierte la parte numérica a un entero
-            $guia++; // Incrementa el valor
-            $guia = "MKL" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatea el número de vuelta a una cadena
         }
+
+        // Verificar si el resultado de la consulta está vacío para la matriz 2
+        if ($matriz == 2) {
+            if (empty($data[0]['id'])) {
+                $guia = "MKL0000001";
+            } else {
+                $guia = $data[0]['guia'];
+                // Verificar si $guia tiene el prefijo 'MKL'
+                if (strpos($guia, 'MKL') === 0) {
+                    $guia = substr($guia, 3); // Extraer la parte numérica de la cadena
+                } else {
+                    $guia = '0'; // Si no tiene el prefijo, inicia en 0
+                }
+                $guia = (int)$guia; // Convertir la parte numérica a un entero
+                $guia++; // Incrementar el valor
+                $guia = "MKL" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatear el número de vuelta a una cadena
+            }
+        }
+
         return $guia;
     }
+
 
 
     public function generarGuia($guia, $matriz)
