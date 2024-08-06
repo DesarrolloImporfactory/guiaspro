@@ -311,6 +311,48 @@ class SpeedModel extends Query
         return ["status" => 200, "message" => "Guia anulada"];
     }
 
+    // Función para procesar la guía y actualizar registros
+    function procesarGuia($guia, $refiere)
+    {
+        // Verificar si la guía ya existe para esta plataforma
+        $sql = "SELECT 1 FROM cabecera_cuenta_referidos WHERE guia = ? AND id_plataforma = ?";
+        $stmt = $this->market->prepare($sql);
+        $stmt->bind_param("ss", $guia, $refiere);
+        $stmt->execute();
+        $exists = $stmt->get_result();
+
+        if ($exists->num_rows == 0) {
+            // Añadir nuevo registro a cabecera_cuenta_referidos
+            $sql = "REPLACE INTO cabecera_cuenta_referidos (guia, monto, fecha, id_plataforma) VALUES (?, 0.3, NOW(), ?)";
+            $stmt = $this->market->prepare($sql);
+            $stmt->bind_param("ss", $guia, $refiere);
+            $stmt->execute();
+
+            // Actualizar el saldo en billetera_referidos
+            $sql = "UPDATE billetera_referidos SET saldo = saldo + 0.3 WHERE id_plataforma = ?";
+            $stmt = $this->market->prepare($sql);
+            $stmt->bind_param("s", $refiere);
+            $stmt->execute();
+
+            // Obtener saldo actual para el historial
+            $sql = "SELECT saldo FROM billetera_referidos WHERE id_plataforma = ?";
+            $stmt = $this->market->prepare($sql);
+            $stmt->bind_param("s", $refiere);
+            $stmt->execute();
+            $data = $stmt->get_result()->fetch_assoc();
+            $nuevo_saldo = $data['saldo'];
+
+            // Insertar en el historial de referidos
+            $sql = "INSERT INTO historial_referidos (id_billetera, motivo, monto, previo, fecha) 
+                 SELECT id_billetera, ?, 0.3, saldo, NOW() 
+                 FROM billetera_referidos WHERE id_plataforma = ?";
+            $stmt = $this->market->prepare($sql);
+            $motivo = "Referido por guia $guia";
+            $stmt->bind_param("ss", $motivo, $refiere);
+            $stmt->execute();
+        }
+    }
+
     public function estado($guia, $estado)
     {
         $sql = "UPDATE guias_speed SET estado = ? WHERE guia = ?";
@@ -327,42 +369,54 @@ class SpeedModel extends Query
             $update = mysqli_query($this->market, $sql);
         }
         if ($estado > 2) {
-            $sql = "SELECT * FROM facturas_cot WHERE numero_guia = '$guia'";
-            $data = mysqli_query($this->market, $sql);
-            $data = mysqli_fetch_assoc($data);
+            // Obtener datos de la factura
+            $sql = "SELECT * FROM facturas_cot WHERE numero_guia = ?";
+            $stmt = $this->market->prepare($sql);
+            $stmt->bind_param("s", $guia);
+            $stmt->execute();
+            $data = $stmt->get_result()->fetch_assoc();
 
             if ($data) {
-                $id_plataforma = $data['id_plataforma'];
-                $sql = "SELECT * FROM plataformas WHERE id_plataforma = '$id_plataforma'";
-                $data = mysqli_query($this->market, $sql);
-                $data = mysqli_fetch_assoc($data);
+                $id_plataforma = $data['id_plataforma']; // Vendedor
+                $id_propietario = $data['id_propietario']; // Proveedor
 
-                if ($data) {
-                    $refiere = $data['refiere'] ?? null;
-                    if (!empty($refiere)) {
-                        $sql = "SELECT 1 FROM cabecera_cuenta_referidos WHERE guia = '$guia' AND id_plataforma = '$refiere'";
-                        $exists = mysqli_query($this->market, $sql);
+                // Obtener datos del vendedor
+                $sql = "SELECT refiere FROM plataformas WHERE id_plataforma = ?";
+                $stmt = $this->market->prepare($sql);
+                $stmt->bind_param("s", $id_plataforma);
+                $stmt->execute();
+                $vendedorData = $stmt->get_result()->fetch_assoc();
+                $refiere_vendedor = $vendedorData['refiere'] ?? null;
 
-                        if (mysqli_num_rows($exists) == 0) {
-                            $sql = "REPLACE INTO cabecera_cuenta_referidos (`guia`, `monto`, `fecha`, `id_plataforma`) VALUES ('$guia', 0.3, NOW(), '$refiere')";
-                            $data = mysqli_query($this->market, $sql);
-                            $sql = "SELECT * FROM billetera_referidos WHERE id_plataforma = '$refiere'";
-                            $data2 = mysqli_query($this->market, $sql);
-                            $data2 = mysqli_fetch_assoc($data2);
-                            $sql = "UPDATE billetera_referidos SET saldo = saldo + 0.3 WHERE id_plataforma = '$refiere'";
-                            $data = mysqli_query($this->market, $sql);
-                            $id_billetera = $data2['id_billetera'];
-                            $sql = "INSERT INTO historial_referidos (id_billetera, motivo, monto, previo, fecha) VALUES ('$id_billetera', 'Referido por guia $guia', 0.3, '" . $data2['saldo'] . "', NOW())";
-                            $data = mysqli_query($this->market, $sql);
-                        }
+                // Obtener datos del proveedor
+                $sql = "SELECT refiere FROM plataformas WHERE id_plataforma = ?";
+                $stmt = $this->market->prepare($sql);
+                $stmt->bind_param("s", $id_propietario);
+                $stmt->execute();
+                $proveedorData = $stmt->get_result()->fetch_assoc();
+                $refiere_proveedor = $proveedorData['refiere'] ?? null;
+
+                // Caso 1: Vendedor y Proveedor son referidos
+                if (!empty($refiere_vendedor) && !empty($refiere_proveedor)) {
+                    // Verificar si la tienda que refiere al proveedor es 1188
+                    if ($refiere_proveedor == 1188) {
+                        // Añadir al que refiere al vendedor y al proveedor
+                        $this->procesarGuia($guia, $refiere_vendedor);
+                        $this->procesarGuia($guia, $refiere_proveedor);
+                    } else {
+                        // Añadir solo al que refiere al vendedor
+                        $this->procesarGuia($guia, $refiere_vendedor);
                     }
+                } elseif (!empty($refiere_vendedor)) {
+                    // Caso 2: Solo el vendedor es referido
+                    $this->procesarGuia($guia, $refiere_vendedor);
+                } elseif (!empty($refiere_proveedor)) {
+                    // Caso 3: Solo el proveedor es referido
+                    $this->procesarGuia($guia, $refiere_proveedor);
                 }
+                // Caso 4: Si ninguno es referido, no hacer nada
             }
         }
-
-
-
-
         return ["status" => 200, "message" => "Estado actualizado"];
     }
 }
