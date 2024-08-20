@@ -26,7 +26,6 @@ class Speed extends Controller
         $telefono = $_POST['telefono'];
         $referencia = $_POST['referenciaD'];
 
-
         $contiene = $_POST['contiene'];
         $fecha = $_POST['fecha'];
         $numero_factura = $_POST['numero_factura'];
@@ -39,7 +38,10 @@ class Speed extends Controller
 
         $matriz = $_POST['matriz'] ?? null;
 
-        $response = $this->model->crear($nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $recuado, $observacion, $monto_factura, $matriz);
+
+        $flete_costo = $ciudad == 599 ? 5.5 : 6.5;
+
+        $response = $this->model->crear($nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $recuado, $observacion, $monto_factura, $matriz, $flete_costo);
         echo json_encode($response);
     }
 
