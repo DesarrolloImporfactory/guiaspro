@@ -456,4 +456,81 @@ class ServientregaModel extends Query
             $stmt->execute();
         }
     }
+
+    public function validarGuias()
+    {
+        $sql = "SELECT guia FROM cabecera_cuenta_pagar WHERE estado_guia >= 300 AND estado_guia < 400";
+        $result = mysqli_query($this->market, $sql);
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        foreach ($data as $key => $value) {
+            $guia = $value['guia'];
+            $response = $this->validarServientrega($guia);
+
+            if ($response) $this->validarServientrega($response);
+        }
+    }
+
+    public function validarGuia($id)
+    {
+        $sql = "SELECT guia FROM cabecera_cuenta_pagar WHERE guia = '$id'";
+        $result = mysqli_query($this->market, $sql);
+        $data = mysqli_fetch_assoc($result);
+
+        if ($data) {
+            $guia = $data['guia'];
+            $response = $this->validarServientrega($guia);
+
+            if ($response) $this->validarServientrega($response);
+        }
+    }
+
+    private function validarServientrega($guia)
+    {
+        $guia = strtoupper($guia);
+        if (str_contains($guia, 'DEVOLUCION AL REMITENTE')) {
+            $this->cambioDeEstado($guia, 500);
+            echo "GUIA: $guia - DEVOLUCION AL REMITENTE\n";
+            return null;
+        } elseif (str_contains($guia, 'REPORTADO ENTREGADO')) {
+            $this->cambioDeEstado($guia, 501);
+            echo "GUIA: $guia - REPORTADO ENTREGADO\n";
+            return null;
+        }
+    }
+
+    public function dataServi($guia)
+    {
+        // URL del servicio web SOAP
+        $wsdlUrl = 'https://servientrega-ecuador.appsiscore.com:443/app/ws/server_trazabilidad.php?wsdl';
+
+        // Configuración del cliente SOAP
+        $options = [
+            'trace' => true, // Habilitar el registro de la solicitud y respuesta SOAP
+            'exceptions' => true, // Habilitar excepciones en caso de errores
+        ];
+
+        // Crear cliente SOAP
+        $client = new SoapClient($wsdlUrl, $options);
+
+        // Parámetros de la solicitud SOAP
+        $params = [
+            'guia' => $guia,
+        ];
+
+        try {
+            // Realizar la llamada al método del servicio web SOAP
+            $response = $client->__soapCall('ConsultarGuiaImagen', $params);
+
+            // Obtener la respuesta del servicio web
+            $result = $response;
+
+
+            // Procesar la respuesta según sea necesario
+            return $result;
+        } catch (SoapFault $e) {
+            // Capturar errores de la solicitud SOAP
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
 }

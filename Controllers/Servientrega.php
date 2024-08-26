@@ -51,4 +51,14 @@ class Servientrega extends Controller
         $guia = $_POST['guia'];
         echo $this->model->obtenerValorPendiente($guia);
     }
+
+    public function validarGuias()
+    {
+        $this->model->validarGuias();
+    }
+
+    public function validarGuia($id)
+    {
+        $this->model->validarGuia($id);
+    }
 }
