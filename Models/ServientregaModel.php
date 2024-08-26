@@ -497,7 +497,7 @@ class ServientregaModel extends Query
             echo "GUIA: $guia - DEVOLUCION AL REMITENTE\n";
             return null;
         } elseif (str_contains($data, 'REPORTADO ENTREGADO')) {
-            $this->cambioDeEstado($guia, 501);
+            $this->cambioDeEstado($guia, 400);
             echo "GUIA: $guia - REPORTADO ENTREGADO\n";
             return null;
         } else {
