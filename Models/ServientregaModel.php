@@ -493,11 +493,11 @@ class ServientregaModel extends Query
     {
         $data = strtoupper($data);
         if (str_contains($data, 'DEVOLUCION AL REMITENTE')) {
-            $this->cambioDeEstado($guia, "500");
+            $this->cambioDeEstado($guia, 500);
             echo "GUIA: $guia - DEVOLUCION AL REMITENTE\n";
             return null;
         } elseif (str_contains($data, 'REPORTADO ENTREGADO')) {
-            $this->cambioDeEstado($guia, "400");
+            $this->cambioDeEstado($guia, 400);
             echo "GUIA: $guia - REPORTADO ENTREGADO\n";
             return null;
         } else {
