@@ -489,8 +489,6 @@ class ServientregaModel extends Query
 
     private function validarServientrega($data, $guia)
     {
-
-
         $data = strtoupper($data);
         if (str_contains($data, 'DEVOLUCION AL REMITENTE')) {
             $this->cambioDeEstado($guia, 500);
