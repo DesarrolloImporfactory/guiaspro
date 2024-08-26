@@ -465,9 +465,9 @@ class ServientregaModel extends Query
 
         foreach ($data as $key => $value) {
             $guia = $value['guia'];
-            $response = $this->validarServientrega($guia);
+            $response = $this->dataServi($guia);
 
-            if ($response) $this->validarServientrega($response);
+            if ($response) $this->validarServientrega($response, $guia);
         }
     }
 
