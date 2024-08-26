@@ -489,6 +489,9 @@ class ServientregaModel extends Query
 
     private function validarServientrega($guia)
     {
+        $num_guia = $guia['NumGui'];
+        echo "GUIA: $num_guia\n";
+        /* 
         $guia = strtoupper($guia);
         if (str_contains($guia, 'DEVOLUCION AL REMITENTE')) {
             $this->cambioDeEstado($guia, 500);
@@ -500,7 +503,7 @@ class ServientregaModel extends Query
             return null;
         } else {
             echo "GUIA: $guia - NO VALIDA\n";
-        }
+        } */
     }
 
     public function dataServi($guia)
