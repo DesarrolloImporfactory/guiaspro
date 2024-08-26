@@ -498,6 +498,8 @@ class ServientregaModel extends Query
             $this->cambioDeEstado($guia, 501);
             echo "GUIA: $guia - REPORTADO ENTREGADO\n";
             return null;
+        } else {
+            echo "GUIA: $guia - NO VALIDA\n";
         }
     }
 
