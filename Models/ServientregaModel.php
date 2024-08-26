@@ -482,6 +482,8 @@ class ServientregaModel extends Query
             $response = $this->validarServientrega($guia);
 
             if ($response) $this->validarServientrega($response);
+        } else {
+            echo "Guia no valida";
         }
     }
 
