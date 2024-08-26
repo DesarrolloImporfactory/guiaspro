@@ -479,7 +479,7 @@ class ServientregaModel extends Query
 
         if ($data) {
             $guia = $data['guia'];
-            $response = $this->validarServientrega($guia);
+            $response = $this->dataServi($guia);
 
             if ($response) $this->validarServientrega($response);
         } else {
