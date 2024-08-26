@@ -481,29 +481,28 @@ class ServientregaModel extends Query
             $guia = $data['guia'];
             $response = $this->dataServi($guia);
 
-            if ($response) $this->validarServientrega($response);
+            if ($response) $this->validarServientrega($response, $guia);
         } else {
             echo "Guia no valida";
         }
     }
 
-    private function validarServientrega($guia)
+    private function validarServientrega($data, $guia)
     {
-        $num_guia = $guia['NumGui'];
-        echo "GUIA: $num_guia\n";
-        /* 
-        $guia = strtoupper($guia);
-        if (str_contains($guia, 'DEVOLUCION AL REMITENTE')) {
+
+
+        $data = strtoupper($data);
+        if (str_contains($data, 'DEVOLUCION AL REMITENTE')) {
             $this->cambioDeEstado($guia, 500);
             echo "GUIA: $guia - DEVOLUCION AL REMITENTE\n";
             return null;
-        } elseif (str_contains($guia, 'REPORTADO ENTREGADO')) {
+        } elseif (str_contains($data, 'REPORTADO ENTREGADO')) {
             $this->cambioDeEstado($guia, 501);
             echo "GUIA: $guia - REPORTADO ENTREGADO\n";
             return null;
         } else {
             echo "GUIA: $guia - NO VALIDA\n";
-        } */
+        }
     }
 
     public function dataServi($guia)
