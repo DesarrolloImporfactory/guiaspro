@@ -491,11 +491,11 @@ class ServientregaModel extends Query
     {
         $data = strtoupper($data);
         if (str_contains($data, 'DEVOLUCION AL REMITENTE')) {
-            $this->cambioDeEstado($guia, 500);
+            $this->cambioDeEstado($guia, "500");
             echo "GUIA: $guia - DEVOLUCION AL REMITENTE\n";
             return null;
         } elseif (str_contains($data, 'REPORTADO ENTREGADO')) {
-            $this->cambioDeEstado($guia, 400);
+            $this->cambioDeEstado($guia, "400");
             echo "GUIA: $guia - REPORTADO ENTREGADO\n";
             return null;
         } else {
@@ -507,13 +507,11 @@ class ServientregaModel extends Query
     {
         // URL del servicio web SOAP
         $wsdlUrl = 'https://servientrega-ecuador.appsiscore.com:443/app/ws/server_trazabilidad.php?wsdl';
-
         // Configuración del cliente SOAP
         $options = [
             'trace' => true, // Habilitar el registro de la solicitud y respuesta SOAP
             'exceptions' => true, // Habilitar excepciones en caso de errores
         ];
-
         // Crear cliente SOAP
         $client = new SoapClient($wsdlUrl, $options);
 
@@ -525,11 +523,8 @@ class ServientregaModel extends Query
         try {
             // Realizar la llamada al método del servicio web SOAP
             $response = $client->__soapCall('ConsultarGuiaImagen', $params);
-
             // Obtener la respuesta del servicio web
             $result = $response;
-
-
             // Procesar la respuesta según sea necesario
             return $result;
         } catch (SoapFault $e) {
