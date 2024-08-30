@@ -78,6 +78,23 @@ class SpeedModel extends Query
             }
         }
 
+        if ($prefix == 'DESA') {
+            if (empty($data[0]['id'])) {
+                $guia = "DES0000001";
+            } else {
+                $guia = $data[0]['guia'];
+                // Verificar si $guia tiene el prefijo 'DES'
+                if (strpos($guia, 'DES') === 0) {
+                    $guia = substr($guia, 3); // Extraer la parte numérica de la cadena
+                } else {
+                    $guia = '0'; // Si no tiene el prefijo, inicia en 0
+                }
+                $guia = (int)$guia; // Convertir la parte numérica a un entero
+                $guia++; // Incrementar el valor
+                $guia = "DES" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatear el número de vuelta a una cadena
+            }
+        }
+
         return $guia;
     }
 
