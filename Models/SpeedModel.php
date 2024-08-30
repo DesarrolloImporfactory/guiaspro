@@ -106,6 +106,8 @@ class SpeedModel extends Query
             $imagen = "https://tiendas.imporsuitpro.com/imgs/Speed.png";
         } else if ($matriz == 2) {
             $imagen = "https://tiendas.imporsuitpro.com/merkalogistic_letters.jpg";
+        } else {
+            $imagen = "https://tiendas.imporsuitpro.com/merkalogistic_letters.jpg";
         }
 
         $sql = "SELECT * FROM guias_speed WHERE guia = '$guia'";
