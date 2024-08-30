@@ -94,7 +94,10 @@ class SpeedModel extends Query
         $sql = "SELECT * FROM guias_speed WHERE guia = '$guia'";
         $data = $this->select($sql);
         $data = $data[0];
-
+        $provincia = 'PICHINCHA';
+        if ($data['ciudad_destino'] == 'GUAYAQUIL' || $data['ciudad_destino'] == 'SAMBORONDOM' || $data['ciudad_destino'] == 'LA PUNTILLA/GUAYAS') {
+            $provincia = 'GUAYAS';
+        }
 
         $html = '
         <!DOCTYPE html>
@@ -228,7 +231,7 @@ class SpeedModel extends Query
                     <div class="ticket-section">
                         <span>' . $data["observacion"] . '  </span> <br>
                         <span style="font-size: 2em;" class="bold">' . $data["ciudad_destino"] . ' </span> <br>
-                        <span class="bold"> PICHINCHA </span>
+                        <span class="bold"> ' . $provincia . ' </span>
                         
                     </div>
 
