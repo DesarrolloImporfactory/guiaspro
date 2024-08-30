@@ -35,7 +35,7 @@ class SpeedModel extends Query
         } else if ($matriz == 2) {
             $prefix = "MKL";
         } else {
-            return null; // Devolver null si la matriz no es válida
+            $prefix = "DESA";
         }
 
         // Ejecutar la consulta para obtener el último ID y guía
