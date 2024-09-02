@@ -22,7 +22,7 @@ class SpeedModel extends Query
         $sql = "INSERT INTO guias_speed (nombre_origen, ciudad_origen, direccion_origen, telefono_origen, referencia_origen, nombre_destino, ciudad_destino, direccion_destino, telefono_destino, referencia_destino, contiene, fecha, factura, url, guia, recaudo, observacion, monto_factura, flete_costo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $data = [$nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $guia, $recaudo, $observacion, $monto_factura, $flete_costo];
         $insert = $this->insert($sql, $data);
-
+        return $insert;
         if ($insert != 1) {
             return ["status" => 500, "message" => $insert["message"]];
         }
