@@ -23,6 +23,9 @@ class SpeedModel extends Query
         $data = [$nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $guia, $recaudo, $observacion, $monto_factura, $flete_costo];
         $insert = $this->insert($sql, $data);
 
+        if ($insert != 1) {
+            return ["status" => 500, "message" => $insert["message"]];
+        }
         $response = $this->generarGuia($guia, $matriz);
         return $response;
     }
