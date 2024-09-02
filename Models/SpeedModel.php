@@ -61,9 +61,7 @@ class SpeedModel extends Query
                 $guia++; // Incrementar el valor
                 $guia = "SPD" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatear el número de vuelta a una cadena
             }
-        }
-
-        // Verificar si el resultado de la consulta está vacío para la matriz 2
+        } else
         if ($matriz == 2) {
             if (empty($data[0]['id'])) {
                 $guia = "MKL0000001";
@@ -79,8 +77,7 @@ class SpeedModel extends Query
                 $guia++; // Incrementar el valor
                 $guia = "MKL" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatear el número de vuelta a una cadena
             }
-        }
-
+        } else
         if ($prefix == 'DESA') {
             if (empty($data[0]['id'])) {
                 $guia = "DES0000001";
@@ -96,6 +93,8 @@ class SpeedModel extends Query
                 $guia++; // Incrementar el valor
                 $guia = "DES" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatear el número de vuelta a una cadena
             }
+        } else {
+            $guia = "ERR000000001";
         }
 
         return $guia;
