@@ -5,6 +5,7 @@ require 'vendor/autoload.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class SpeedModel extends Query
 {
@@ -104,6 +105,9 @@ class SpeedModel extends Query
 
     public function generarGuia($guia, $matriz)
     {
+        $generator = new BarcodeGeneratorPNG();
+        $barcode = base64_encode($generator->getBarcode($guia, $generator::TYPE_CODE_128));
+
 
         if ($matriz == 1) {
             $imagen = "https://tiendas.imporsuitpro.com/imgs/Speed.png";
@@ -278,6 +282,10 @@ class SpeedModel extends Query
         }
 
         $final = '
+          <!-- Sección del código de barras -->
+            <div class="ticket-section text-center">
+                <img src="data:image/png;base64,' . $barcode . '" alt="Código de Barras">
+            </div>
                 </div>
             </body>
 
