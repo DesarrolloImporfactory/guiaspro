@@ -280,8 +280,6 @@ class SpeedModel extends Query
             </div>';
         }
 
-
-
         $final = '
          <!-- Sección del código de barras -->
         <div class="ticket-section text-center">
