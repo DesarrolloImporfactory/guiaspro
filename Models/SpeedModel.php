@@ -104,6 +104,10 @@ class SpeedModel extends Query
 
     public function generarGuia($guia, $matriz)
     {
+
+        $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+        $barcode = base64_encode($generator->getBarcode($guia, $generator::TYPE_CODE_128));
+
         if ($matriz == 1) {
             $imagen = "https://tiendas.imporsuitpro.com/imgs/Speed.png";
         } else if ($matriz == 2) {
@@ -276,7 +280,13 @@ class SpeedModel extends Query
             </div>';
         }
 
+
+
         $final = '
+         <!-- Sección del código de barras -->
+        <div class="ticket-section text-center">
+            <img src="data:image/png;base64,' . $barcode . '" alt="Código de Barras">
+        </div>
                 </div>
             </body>
 
