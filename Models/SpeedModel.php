@@ -281,10 +281,7 @@ class SpeedModel extends Query
         }
 
         $final = '
-         <!-- Sección del código de barras -->
-        <div class="ticket-section text-center">
-            <img src="data:image/png;base64,' . $barcode . '" alt="Código de Barras">
-        </div>
+       
                 </div>
             </body>
 
