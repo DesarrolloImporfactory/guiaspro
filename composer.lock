@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d6e1f4a231a7e1f1ab18531171dbfb2",
+    "content-hash": "074396113bbb63236039a84780e82400",
     "packages": [
         {
             "name": "dompdf/dompdf",
@@ -367,21 +367,21 @@
         },
         {
             "name": "picqer/php-barcode-generator",
-            "version": "v3.0.0",
+            "version": "v2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picqer/php-barcode-generator.git",
-                "reference": "9599fe8a6b194f855ed006620688c5f23318c7e1"
+                "reference": "e9d39681f617705492b609fc3fc58465ef88e8fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picqer/php-barcode-generator/zipball/9599fe8a6b194f855ed006620688c5f23318c7e1",
-                "reference": "9599fe8a6b194f855ed006620688c5f23318c7e1",
+                "url": "https://api.github.com/repos/picqer/php-barcode-generator/zipball/e9d39681f617705492b609fc3fc58465ef88e8fd",
+                "reference": "e9d39681f617705492b609fc3fc58465ef88e8fd",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": "^8.2"
+                "php": "^8.1"
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.10",
@@ -442,9 +442,15 @@
             ],
             "support": {
                 "issues": "https://github.com/picqer/php-barcode-generator/issues",
-                "source": "https://github.com/picqer/php-barcode-generator/tree/v3.0.0"
+                "source": "https://github.com/picqer/php-barcode-generator/tree/v2.4.2"
             },
-            "time": "2024-09-21T08:26:14+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/casperbakker",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-09-18T08:09:33+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
