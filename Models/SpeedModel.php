@@ -452,4 +452,11 @@ class SpeedModel extends Query
         }
         return ["status" => 200, "message" => "Estado actualizado"];
     }
+
+    public function buscar($guia)
+    {
+        $sql = "SELECT * from guias_speed WHERE guia = ?";
+        $data = $this->select($sql, [$guia]);
+        return $data;
+    }
 }
