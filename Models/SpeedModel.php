@@ -455,8 +455,8 @@ class SpeedModel extends Query
 
     public function buscar($guia)
     {
-        $sql = "SELECT * from guias_speed WHERE guia = ?";
-        $data = $this->select($sql, [$guia]);
+        $sql = "SELECT * from guias_speed WHERE guia = $guia";
+        $data = $this->select($sql);
         return $data;
     }
 }
