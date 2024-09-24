@@ -457,6 +457,10 @@ class SpeedModel extends Query
     {
         $sql = "SELECT * from guias_speed WHERE guia = '$guia'";
         $data = $this->select($sql);
-        return $data;
+        if (!empty($data)) {
+            return ["status" => 200, "data" => $data[0]];
+        } else {
+            return ["status" => 400, "message" => "Guia no encontrada"];
+        }
     }
 }

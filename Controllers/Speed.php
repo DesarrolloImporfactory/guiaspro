@@ -67,7 +67,16 @@ class Speed extends Controller
     public function buscar($guia)
     {
 
-        $response = $this->model->buscar($guia);
+        if (str_contains($guia, 'SPD') || str_contains($guia, 'MKL')) {
+            $response = $this->model->buscar($guia);
+            echo json_encode($response);
+            return;
+        }
+
+        $response = [
+            'status' => '400',
+            'message' => 'Guia no encontrada'
+        ];
         echo json_encode($response);
     }
 }
