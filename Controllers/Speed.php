@@ -64,9 +64,9 @@ class Speed extends Controller
         echo json_encode($response);
     }
 
-    public function buscar()
+    public function buscar($guia)
     {
-        $guia = $_POST['guia'];
+
         $response = $this->model->buscar($guia);
         echo json_encode($response);
     }
