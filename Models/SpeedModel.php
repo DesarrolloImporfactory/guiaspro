@@ -20,8 +20,8 @@ class SpeedModel extends Query
     {
         $guia = $this->ultimaGuia($matriz);
 
-        $sql = "INSERT INTO guias_speed (nombre_origen, ciudad_origen, direccion_origen, telefono_origen, referencia_origen, nombre_destino, ciudad_destino, direccion_destino, telefono_destino, referencia_destino, contiene, fecha, factura, url, guia, recaudo, observacion, monto_factura, flete_costo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $data = [$nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $guia, $recaudo, $observacion, $monto_factura, $flete_costo];
+        $sql = "INSERT INTO guias_speed (nombre_origen, ciudad_origen, direccion_origen, telefono_origen, referencia_origen, nombre_destino, ciudad_destino, direccion_destino, telefono_destino, referencia_destino, contiene, fecha, factura, guia, recaudo, observacion, monto_factura, flete_costo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $data = [$nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $guia, $recaudo, $observacion, $monto_factura, $flete_costo];
         $insert = $this->insert($sql, $data);
 
         if ($insert != 1) {
@@ -462,5 +462,20 @@ class SpeedModel extends Query
         } else {
             return ["status" => 400, "message" => "Guia no encontrada"];
         }
+    }
+
+    public function asignarUrl($guia, $url)
+    {
+        $sql = "UPDATE guias_speed SET url = ? WHERE guia = ?";
+        $update = $this->update($sql, [$url, $guia]);
+
+        // Actualizar la URL en la factura
+        $sql = "UPDATE facturas_cot SET googlemaps = ? WHERE numero_guia = ?";
+        $stmt = $this->market->prepare($sql);
+        $stmt->bind_param("ss", $url, $guia);
+        $stmt->execute();
+
+
+        return ["status" => 200, "message" => "URL asignada"];
     }
 }

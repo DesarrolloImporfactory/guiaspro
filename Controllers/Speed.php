@@ -79,4 +79,12 @@ class Speed extends Controller
         ];
         echo json_encode($response);
     }
+
+    public function asignarUrl()
+    {
+        $guia = $_POST['guia'];
+        $url = $_POST['url'];
+        $response = $this->model->asignarUrl($guia, $url);
+        echo json_encode($response);
+    }
 }
