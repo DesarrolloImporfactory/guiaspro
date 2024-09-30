@@ -486,6 +486,10 @@ class SpeedModel extends Query
 
         $usuario = $usuario[0];
 
-        return $usuario;
+        return [
+            "status" => 200,
+            $usuario
+
+        ];
     }
 }
