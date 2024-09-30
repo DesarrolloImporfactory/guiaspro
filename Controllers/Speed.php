@@ -87,4 +87,11 @@ class Speed extends Controller
         $response = $this->model->asignarUrl($guia, $url);
         echo json_encode($response);
     }
+
+    public function perfil()
+    {
+        $id_usuario = $_POST['id_usuario'];
+        $response = $this->model->obtener_usuario($id_usuario);
+        echo json_encode($response);
+    }
 }
