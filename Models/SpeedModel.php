@@ -482,7 +482,9 @@ class SpeedModel extends Query
     public function obtener_usuario($id_usuario)
     {
         $sql = "SELECT u.nombre_users, u.id_users, u.cargo_users, u.date_added, m.numero_motorizado, m.placa_motorizado, m.matricula, m.licencia, p.nombre_tienda FROM users u LEFT JOIN motorizados m ON u.id_users = m.id_usuario LEFT JOIN plataformas p ON m.id_plataforma = p.id_plataforma WHERE u.id_users = $id_usuario";
-        $usuario = $this->select($sql);
+        $usuario = $this->market->query($sql);
+        $usuario = $usuario->fetch_all(MYSQLI_ASSOC);
+
 
         $usuario = $usuario[0];
 
