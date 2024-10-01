@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 require 'vendor/autoload.php';
+require_once 'Class/ImageUploader.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -490,5 +491,26 @@ class SpeedModel extends Query
         $usuario['status'] = 200;
         return
             $usuario;
+    }
+
+    public function upload($id_usuario, $file, $tipo)
+    {
+        if ($tipo == "matricula") {
+            $target_dir = "uploads/matricula/";
+            $sql_add = "UPDATE motorizados SET matricula = ? WHERE id_usuario = ?";
+        } else if ($tipo == "licencia") {
+            $target_dir = "uploads/licencia/";
+            $sql_add = "UPDATE motorizados SET licencia = ? WHERE id_usuario = ?";
+        }
+        $uploader = new ImageUploader($target_dir);
+
+        $response = $uploader->uploadImage($file);
+
+        if ($response['status'] == 200) {
+            $subir = $this->market->prepare($sql_add);
+            $subir->bind_param("si", $response['data'], $id_usuario);
+        }
+
+        return  $response;
     }
 }

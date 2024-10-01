@@ -94,4 +94,13 @@ class Speed extends Controller
         $response = $this->model->obtener_usuario($id_usuario);
         echo json_encode($response);
     }
+
+    public function upload()
+    {
+        $id_usuario = $_POST['id_usuario'];
+        $file = $_FILES['file'];
+        $tipo = $_POST['tipo'];
+        $response = $this->model->upload($id_usuario, $file, $tipo);
+        echo json_encode($response);
+    }
 }
