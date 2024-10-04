@@ -229,9 +229,7 @@ class SpeedModel extends Query
                                 </td>
                             </tr>
                         </table>
-
                     </div>
-
                     <div class="ticket-info">
                         <table style="width: 100%;">
                             <tr>
@@ -247,21 +245,16 @@ class SpeedModel extends Query
                             </tr>
                         </table>
                     </div>
-
                     <div class="ticket-section">
                     <span class="bold">DESTINO: ' . $data["nombre_destino"] . '</span> <br> 
                         <span> ' . $data["direccion_destino"] . ', ' . $data["referencia_destino"] . '</span><br>
-                        <span class="bold">TEL: ' . $data["telefono_destino"] . '</span>
-                    
+                        <span class="bold">TEL: ' . $data["telefono_destino"] . '</span>              
                     </div>
-
                     <div class="ticket-section">
                         <span>' . $data["observacion"] . '  </span> <br>
                         <span style="font-size: 1.5em;" class="bold">' . $data["ciudad_destino"] . ' </span> <br>
                         <span class="bold"> ' . $provincia . ' </span>
-                        
                     </div>
-
                     <div class="ticket-section">
                         <span class="bold">Contenido: </span><br>  <span style="font-size: 0.75rem; max-width: 60px;">' . $data["contiene"] . '</span><br>                    
                     </div>
@@ -274,7 +267,7 @@ class SpeedModel extends Query
             </div>
             ';
         } else {
-            $recaudado = ' <div class="ticket-section text-center">
+            $recaudado = '<div class="ticket-section text-center">
             <br> <span class="bold">GUIA SIN RECAUDO</span><br>        
             </div>';
         }
@@ -286,7 +279,6 @@ class SpeedModel extends Query
             </div>
                 </div>
             </body>
-
         </html>
         ';
 
