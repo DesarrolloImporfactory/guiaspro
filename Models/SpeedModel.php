@@ -257,16 +257,13 @@ class SpeedModel extends Query
 
                     <div class="ticket-section">
                         <span>' . $data["observacion"] . '  </span> <br>
-                        <span style="font-size: 2em;" class="bold">' . $data["ciudad_destino"] . ' </span> <br>
+                        <span style="font-size: 1.5em;" class="bold">' . $data["ciudad_destino"] . ' </span> <br>
                         <span class="bold"> ' . $provincia . ' </span>
                         
                     </div>
 
                     <div class="ticket-section">
-                        <span> Peso:  2 KG<br></span>
-                        <span class="bold">Contenido: </span><br>  <span style="font-size: 0.75rem; max-width: 60px;">' . $data["contiene"] . '</span><br>
-                        <span>Valor asegurado: $0.00</span>
-                    
+                        <span class="bold">Contenido: </span><br>  <span style="font-size: 0.75rem; max-width: 60px;">' . $data["contiene"] . '</span><br>                    
                     </div>
         ';
         if ($data['recaudo'] == '1') {
