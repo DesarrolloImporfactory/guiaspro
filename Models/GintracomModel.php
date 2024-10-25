@@ -107,6 +107,8 @@ class GintracomModel extends Query
                 }
             }
         }
+
+        $this->webhooktelefono($guia);
     }
 
     function procesarGuia($guia, $refiere)
