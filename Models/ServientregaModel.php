@@ -200,6 +200,34 @@ class ServientregaModel extends Query
 
         http_response_code(200);
         echo "Recibido correctamente";
+
+        $this->webhooktelefono($guia);
+    }
+
+    public function webhooktelefono($guia)
+    {
+        $id_factura = $this->findIdFactura($guia);
+        $ch = curl_init();
+        $url = "https://new.imporsuitpro.com/speed/automatizador";
+        //formdata 
+        $data = array('id_factura' => $id_factura);
+        $data = http_build_query($data);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        echo $response;
+    }
+
+    public function findIdFactura($guia)
+    {
+        $sql = "SELECT id_factura FROM facturas_cot WHERE numero_guia = '$guia'";
+        $result = mysqli_query($this->market, $sql);
+        $row = mysqli_fetch_assoc($result);
+        return $row['id_factura'];
     }
 
     public function anularGuia($id)
