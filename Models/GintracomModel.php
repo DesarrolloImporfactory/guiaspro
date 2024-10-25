@@ -186,6 +186,37 @@ class GintracomModel extends Query
         header("Content-Disposition: attachment; filename=\"GINTRACOM" . $id . ".pdf\"");
         readfile($server_url);
     }
+
+    public function getIdFactura($guia)
+    {
+        $sql = "SELECT id_factura FROM facturas_cot WHERE numero_guia = ?";
+        $stmt = $this->market->prepare($sql);
+        $stmt->bind_param("s", $guia);
+        $stmt->execute();
+        $data = $stmt->get_result()->fetch_assoc();
+        return $data['id_factura'];
+    }
+
+    public function webhooktelefono($guia)
+    {
+        $id_factura = $this->getIdFactura($guia);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://new.imporsuitpro.com/speed/automatizador");
+        //form data
+        $data = array(
+            'id_factura' => $id_factura,
+            'guia' => $guia
+        );
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        //return the transfer as a string
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        echo $output;
+    }
+
+
     public function anular($id)
     {
         $url = "https://ec.gintracom.site/web/import-suite/anular";
