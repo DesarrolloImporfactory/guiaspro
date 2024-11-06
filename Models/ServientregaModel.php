@@ -113,7 +113,7 @@ class ServientregaModel extends Query
     public function visualizarGuias($id, $nombre)
     {
         // URL del servicio web
-        $url = "https://swservicli.servientrega.com.ec:5001/api/GuiaDigital/[" . $id . ",'integracion.api.1','54321']";
+        $url = "https://swservicli.servientrega.com.ec:5001/api/GuiaDigital/[" . $id . ",'imp.1793168264001','Ecuador24']";
 
         // Inicializar cURL
         $ch = curl_init();
@@ -232,7 +232,7 @@ class ServientregaModel extends Query
 
     public function anularGuia($id)
     {
-        $url = "https://swservicli.servientrega.com.ec:5052/api/guiawebs/['" . $id . "','integracion.api.1','54321']";
+        $url = "https://swservicli.servientrega.com.ec:5052/api/guiawebs/['" . $id . "','imp.1793168264001','Ecuador24']";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
