@@ -52,7 +52,7 @@ class ServientregaModel extends Query
         $contenido = $row['contiene'];
 
         // URL del servicio web
-        $url = "https://swservicli.servientrega.com.ec:5001/api/GuiaDigital/[" . $id . ",'integracion.api.1','54321']";
+        $url = "https://swservicli.servientrega.com.ec:5001/api/GuiaDigital/[" . $id . ",'integracion.api.1','12345']";
 
         // Inicializar cURL
         $ch = curl_init();
