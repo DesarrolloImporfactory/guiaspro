@@ -97,7 +97,7 @@ class GintracomModel extends Query
                         $data3 = mysqli_query($this->market, $sql);
                         $data3 = mysqli_fetch_all($data3, MYSQLI_ASSOC);
                         if (count($data3) > 0) {
-                            $sql = "UPDATE novedades SET estado_novedad = '" . $dato["novedades"]["codigoNovedad"] . "', novedad = '" . $dato["novedades"]["nombreNovedad"] . "', fecha = '" . $dato["novedades"]["fechaNovedad"] . "'solucionada=0  WHERE guia_novedad = '" . $guia . "'";
+                            $sql = "UPDATE novedades SET estado_novedad = '" . $dato["novedades"]["codigoNovedad"] . "', novedad = '" . $dato["novedades"]["nombreNovedad"] . "', fecha = '" . $dato["novedades"]["fechaNovedad"] . "' solucionada=0  WHERE guia_novedad = '" . $guia . "'";
                             $response = mysqli_query($this->market, $sql);
                             echo    $sql;
                             echo mysqli_error($this->market);
