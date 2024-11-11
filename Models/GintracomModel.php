@@ -97,7 +97,7 @@ class GintracomModel extends Query
                         $data3 = mysqli_query($this->market, $sql);
                         $data3 = mysqli_fetch_all($data3, MYSQLI_ASSOC);
                         if (count($data3) > 0) {
-                            $sql = "UPDATE novedades SET estado_novedad = '" . $dato["novedades"]["codigoNovedad"] . "', novedad = '" . $dato["novedades"]["nombreNovedad"] . "', fecha = '" . $dato["novedades"]["fechaNovedad"] . "' WHERE guia_novedad = '" . $guia . "'";
+                            $sql = "UPDATE novedades SET estado_novedad = '" . $dato["novedades"]["codigoNovedad"] . "', novedad = '" . $dato["novedades"]["nombreNovedad"] . "', fecha = '" . $dato["novedades"]["fechaNovedad"] . "'solucionada=0  WHERE guia_novedad = '" . $guia . "'";
                             $response = mysqli_query($this->market, $sql);
                         } else {
                             $sql = "INSERT INTO novedades (guia_novedad, cliente_novedad, estado_novedad, novedad, tracking, fecha, id_plataforma) VALUES ( '" . $guia . "', '" . $nombreD . "', '" . $dato["novedades"]["codigoNovedad"] . "', '" . $dato["novedades"]["nombreNovedad"] . "', 'https://ec.gintracom.site/web/site/tracking', '" . $dato["novedades"]["fechaNovedad"] . "', '" . $plataforma . "')";
