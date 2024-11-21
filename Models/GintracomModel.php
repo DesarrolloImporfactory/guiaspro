@@ -86,8 +86,18 @@ class GintracomModel extends Query
                         $sql = "UPDATE facturas_cot SET estado_guia_sistema = '" . $dato["estado"] . "' WHERE numero_guia = '" . $guia . "'";
                         $response = mysqli_query($this->market, $sql);
 
-                        $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '" . $dato["estado"] . "', monto_recibir=precio_envio*-1, valor_pendiente=precio_envio*-1 WHERE guia = '" . $guia . "'";
-                        $response = mysqli_query($this->market, $sql);
+                        $fueAcreditada = "SELECT * FROM cabecera_cuenta_pagar WHERE guia = '$guia'";
+                        $fueAcreditada = mysqli_query($this->market, $fueAcreditada);
+                        $fueAcreditada = mysqli_fetch_all($fueAcreditada, MYSQLI_ASSOC);
+                        $visto = $fueAcreditada[0]["visto"];
+
+                        if ($visto == 0) {
+                            $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '" . $dato["estado"] . "', monto_recibir=precio_envio*-1, valor_pendiente=precio_envio*-1 WHERE guia = '" . $guia . "'";
+                            $response = mysqli_query($this->market, $sql);
+                        } else {
+                            $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '" . $dato["estado"] . "' WHERE guia = '" . $guia . "'";
+                            $response = mysqli_query($this->market, $sql);
+                        }
                     } else {
                         $sql = "UPDATE facturas_cot SET estado_guia_sistema = '" . $dato["estado"] . "' WHERE numero_guia = '" . $guia . "'";
                         $response = mysqli_query($this->market, $sql);
