@@ -489,7 +489,7 @@ class ServientregaModel extends Query
 
     public function validarGuias()
     {
-        $sql = "SELECT guia, estado_guia FROM `cabecera_cuenta_pagar` where guia REGEXP '^[0-9]+$' and estado_guia >=300 and estado_guia < 400 and visto= 0;";
+        $sql = "SELECT guia, estado_guia FROM `cabecera_cuenta_pagar` where guia REGEXP '^[0-9]+$' and estado_guia >=100 and estado_guia < 400 and visto= 0;";
         $result = mysqli_query($this->market, $sql);
         $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
