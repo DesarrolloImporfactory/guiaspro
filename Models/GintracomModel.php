@@ -82,10 +82,18 @@ class GintracomModel extends Query
                         }
                     }
 
-                    $sql = "UPDATE facturas_cot SET estado_guia_sistema = '" . $dato["estado"] . "' WHERE numero_guia = '" . $guia . "'";
-                    $response = mysqli_query($this->market, $sql);
-                    $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '" . $dato["estado"] . "' WHERE guia = '" . $guia . "'";
-                    $response = mysqli_query($this->market, $sql);
+                    if ($dato["estado"] == 9 || $dato["estado"] == 13) {
+                        $sql = "UPDATE facturas_cot SET estado_guia_sistema = '9' WHERE numero_guia = '" . $guia . "'";
+                        $response = mysqli_query($this->market, $sql);
+                        $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '9' WHERE guia = '" . $guia . "'";
+                        $response = mysqli_query($this->market, $sql);
+                    } else {
+                        $sql = "UPDATE facturas_cot SET estado_guia_sistema = '" . $dato["estado"] . "' WHERE numero_guia = '" . $guia . "'";
+                        $response = mysqli_query($this->market, $sql);
+
+                        $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '" . $dato["estado"] . "' WHERE guia = '" . $guia . "'";
+                        $response = mysqli_query($this->market, $sql);
+                    }
                 }
                 $plataforma = $data2[0]["id_plataforma"];
                 $nombreD = $data2[0]["nombre"];
