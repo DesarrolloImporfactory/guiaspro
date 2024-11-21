@@ -83,9 +83,10 @@ class GintracomModel extends Query
                     }
 
                     if ($dato["estado"] == 9 || $dato["estado"] == 13) {
-                        $sql = "UPDATE facturas_cot SET estado_guia_sistema = '9' WHERE numero_guia = '" . $guia . "'";
+                        $sql = "UPDATE facturas_cot SET estado_guia_sistema = '" . $dato["estado"] . "' WHERE numero_guia = '" . $guia . "'";
                         $response = mysqli_query($this->market, $sql);
-                        $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '9' WHERE guia = '" . $guia . "'";
+
+                        $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '" . $dato["estado"] . "', monto_recibir=precio_envio*-1, valor_pendiente=precio_envio*-1 WHERE guia = '" . $guia . "'";
                         $response = mysqli_query($this->market, $sql);
                     } else {
                         $sql = "UPDATE facturas_cot SET estado_guia_sistema = '" . $dato["estado"] . "' WHERE numero_guia = '" . $guia . "'";
