@@ -294,6 +294,10 @@ class ServientregaModel extends Query
 
             if ($data) {
                 $id_plataforma = $data['id_plataforma']; // Vendedor
+                if ($id_plataforma == 2324 || $id_plataforma == 3031) {
+                    //romper la funcion
+                    return;
+                }
                 $id_propietario = $data['id_propietario']; // Proveedor
 
                 // Obtener datos del vendedor

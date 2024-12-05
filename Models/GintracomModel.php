@@ -42,6 +42,10 @@ class GintracomModel extends Query
 
                         if ($data) {
                             $id_plataforma = $data['id_plataforma']; // Vendedor
+                            // si la plataforma vendedora es 3031 o 2324 saltar todo
+                            if ($id_plataforma == 3031 || $id_plataforma == 2324) {
+                                continue;
+                            }
                             $id_propietario = $data['id_propietario']; // Proveedor
 
                             // Obtener datos del vendedor
