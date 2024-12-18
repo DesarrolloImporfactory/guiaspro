@@ -43,48 +43,47 @@ class GintracomModel extends Query
                         if ($data) {
                             $id_plataforma = $data['id_plataforma']; // Vendedor
                             // si la plataforma vendedora es 3031 o 2324 saltar todo
-                            if ($id_plataforma == 3031 || $id_plataforma == 2324) {
-                            } else {
 
 
-                                $id_propietario = $data['id_propietario']; // Proveedor
 
-                                // Obtener datos del vendedor
-                                $sql = "SELECT refiere FROM plataformas WHERE id_plataforma = ?";
-                                $stmt = $this->market->prepare($sql);
-                                $stmt->bind_param("s", $id_plataforma);
-                                $stmt->execute();
-                                $vendedorData = $stmt->get_result()->fetch_assoc();
-                                $refiere_vendedor = $vendedorData['refiere'] ?? null;
+                            $id_propietario = $data['id_propietario']; // Proveedor
 
-                                // Obtener datos del proveedor
-                                $sql = "SELECT refiere FROM plataformas WHERE id_plataforma = ?";
-                                $stmt = $this->market->prepare($sql);
-                                $stmt->bind_param("s", $id_propietario);
-                                $stmt->execute();
-                                $proveedorData = $stmt->get_result()->fetch_assoc();
-                                $refiere_proveedor = $proveedorData['refiere'] ?? null;
+                            // Obtener datos del vendedor
+                            $sql = "SELECT refiere FROM plataformas WHERE id_plataforma = ?";
+                            $stmt = $this->market->prepare($sql);
+                            $stmt->bind_param("s", $id_plataforma);
+                            $stmt->execute();
+                            $vendedorData = $stmt->get_result()->fetch_assoc();
+                            $refiere_vendedor = $vendedorData['refiere'] ?? null;
 
-                                // Caso 1: Vendedor y Proveedor son referidos
-                                if (!empty($refiere_vendedor) && !empty($refiere_proveedor)) {
-                                    // Verificar si la tienda que refiere al proveedor es 1188
-                                    if ($refiere_proveedor == 1188) {
-                                        // Añadir al que refiere al vendedor y al proveedor
-                                        $this->procesarGuia($guia, $refiere_vendedor);
-                                        $this->procesarGuia($guia, $refiere_proveedor);
-                                    } else {
-                                        // Añadir solo al que refiere al vendedor
-                                        $this->procesarGuia($guia, $refiere_vendedor);
-                                    }
-                                } elseif (!empty($refiere_vendedor)) {
-                                    // Caso 2: Solo el vendedor es referido
+                            // Obtener datos del proveedor
+                            $sql = "SELECT refiere FROM plataformas WHERE id_plataforma = ?";
+                            $stmt = $this->market->prepare($sql);
+                            $stmt->bind_param("s", $id_propietario);
+                            $stmt->execute();
+                            $proveedorData = $stmt->get_result()->fetch_assoc();
+                            $refiere_proveedor = $proveedorData['refiere'] ?? null;
+
+                            // Caso 1: Vendedor y Proveedor son referidos
+                            if (!empty($refiere_vendedor) && !empty($refiere_proveedor)) {
+                                // Verificar si la tienda que refiere al proveedor es 1188
+                                if ($refiere_proveedor == 1188) {
+                                    // Añadir al que refiere al vendedor y al proveedor
                                     $this->procesarGuia($guia, $refiere_vendedor);
-                                } elseif (!empty($refiere_proveedor)) {
-                                    // Caso 3: Solo el proveedor es referido
                                     $this->procesarGuia($guia, $refiere_proveedor);
+                                } else {
+                                    // Añadir solo al que refiere al vendedor
+                                    $this->procesarGuia($guia, $refiere_vendedor);
                                 }
-                                // Caso 4: Si ninguno es referido, no hacer nada
+                            } elseif (!empty($refiere_vendedor)) {
+                                // Caso 2: Solo el vendedor es referido
+                                $this->procesarGuia($guia, $refiere_vendedor);
+                            } elseif (!empty($refiere_proveedor)) {
+                                // Caso 3: Solo el proveedor es referido
+                                $this->procesarGuia($guia, $refiere_proveedor);
                             }
+                            // Caso 4: Si ninguno es referido, no hacer nada
+
                         }
                     }
 
