@@ -543,13 +543,14 @@ class ServientregaModel extends Query
         $wsdlUrl = 'https://servientrega-ecuador.appsiscore.com:443/app/ws/server_trazabilidad.php?wsdl';
         // Configuración del cliente SOAP
         $options = [
-            'trace' => true, // Habilitar el registro de la solicitud y respuesta SOAP
-            'exceptions' => true, // Habilitar excepciones en caso de errores
+            'location' => 'https://servientrega-ecuador.appsiscore.com/app/ws/server_trazabilidad.php',
+            'uri' => 'https://servientrega-ecuador.appsiscore.com/app/ws/',
+            'trace' => true,
+            'exceptions' => true
         ];
-        // Crear cliente SOAP
-        $client = new SoapClient($wsdlUrl, $options);
+        $client = new SoapClient(null, $options);
+        // Luego llamas al método con __soapCall, pasando 'ConsultarGuiaImagen' y los parámetros adecuados.
 
-        // Parámetros de la solicitud SOAP
         $params = [
             'guia' => $guia,
         ];
