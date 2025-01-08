@@ -251,7 +251,8 @@ class ServientregaModel extends Query
 
         // Cerrar la sesión cURL
         curl_close($ch);
-        echo $response;
+        $response = json_decode($response, true);
+        print_r($response);
         if ($response['msj'] != 'LA GUÍA NO PUEDE SER ANULADA, PORQUE ESTA SIENDO PROCESADA') {
             $this->cambioDeEstado($id, "101");
 
