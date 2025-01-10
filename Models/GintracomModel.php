@@ -110,6 +110,7 @@ class GintracomModel extends Query
                         $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '" . $dato["estado"] . "' WHERE guia = '" . $guia . "'";
                         $response = mysqli_query($this->market, $sql);
                     }
+                    $this->bitacora($guia, $dato["estado"], $dato["transportadora"]);
                 }
                 $plataforma = $data2[0]["id_plataforma"];
                 $nombreD = $data2[0]["nombre"];

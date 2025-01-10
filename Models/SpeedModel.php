@@ -378,6 +378,7 @@ class SpeedModel extends Query
 
     public function estado($guia, $estado)
     {
+        $this->bitacora($guia, $estado, 'SPEED');
         $sql = "UPDATE guias_speed SET estado = ? WHERE guia = ?";
         $update = $this->update($sql, [$estado, $guia]);
 
