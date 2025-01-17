@@ -251,7 +251,6 @@ class ServientregaModel extends Query
 
         // Cerrar la sesión cURL
         curl_close($ch);
-        echo $response;
         if ($response['msj'] != 'LA GUÍA NO PUEDE SER ANULADA, PORQUE ESTA SIENDO PROCESADA') {
             $this->cambioDeEstado($id, "101");
 
@@ -259,6 +258,15 @@ class ServientregaModel extends Query
             $result = mysqli_query($this->market, $sql);
             $sql = "DELETE FROM cabecera_cuenta_pagar WHERE guia = '$id'";
             $result = mysqli_query($this->market, $sql);
+            echo json_encode([
+                "status" => "200",
+                "message" => "Guia anulada correctamente"
+            ]);
+        } else {
+            echo json_encode([
+                "status" => "400",
+                "message" => "La guia no puede ser anulada, porque esta siendo procesada"
+            ]);
         }
     }
 
