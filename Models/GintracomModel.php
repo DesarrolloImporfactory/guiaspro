@@ -258,8 +258,10 @@ class GintracomModel extends Query
         $sql = "DELETE FROM cabecera_cuenta_pagar WHERE guia = '" . $id . "'";
         $response = mysqli_query($this->market, $sql);
 
-
-        echo $response;
+        echo json_encode([
+            "status" => 200,
+            "message" => "Guia anulada correctamente"
+        ]);
     }
 
     private function enviar_datos($url, $id)
