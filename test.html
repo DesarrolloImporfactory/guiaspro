@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exportar a Excel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+
+<body>
+    <h1>Exportar Datos a Excel</h1>
+    <script>
+        // Función para obtener los datos de la API
+        async function getDatos() {
+            try {
+                const response = await fetch('https://app.imporsuit.mx/reportes/reporteMX');
+                const data = await response.json();
+
+                // Llamamos a la función para generar y descargar el archivo Excel
+                exportarExcel(data);
+            } catch (error) {
+                console.error('Error al obtener los datos:', error);
+            }
+        }
+
+        // Función para exportar a Excel con estilo y ajuste de celdas
+        function exportarExcel(datos) {
+            // Convertir los datos a una hoja Excel
+            const hoja = XLSX.utils.json_to_sheet(datos);
+
+            // Aplicar estilos a los encabezados (fila 1)
+            const encabezados = Object.keys(datos[0]); // Obtener los nombres de las columnas
+            encabezados.forEach((_, index) => {
+                const celda = XLSX.utils.encode_cell({ r: 0, c: index }); // Celda de la fila 0 (encabezado)
+                hoja[celda].s = {
+                    font: { bold: true, color: { rgb: 'FFFFFF' } },
+                    fill: { fgColor: { rgb: '4F81BD' } },
+                    alignment: { horizontal: 'center', vertical: 'center' },
+                };
+            });
+
+            // Ajustar automáticamente el ancho de las columnas
+            const maxAncho = datos.map(row =>
+                Object.values(row).map(val => (val ? val.toString().length : 0)) // Convertir null o undefined a 0
+            );
+            const colWidths = encabezados.map((_, index) =>
+                Math.max(...maxAncho.map(val => val[index]), encabezados[index].length) + 5
+            );
+            hoja['!cols'] = colWidths.map(width => ({ wch: width }));
+
+            // Crear un libro y agregar la hoja
+            const libro = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(libro, hoja, 'Reporte');
+
+            // Descargar el archivo Excel
+            XLSX.writeFile(libro, 'reporte_estilizado.xlsx');
+        }
+
+        // Llamar a la función para obtener los datos y exportar el Excel
+        getDatos();
+    </script>
+</body>
+
+</html>

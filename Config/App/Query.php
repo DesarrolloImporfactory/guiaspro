@@ -26,6 +26,23 @@ class Query extends Conexion
         return $result;
     }
 
+    public function bitacora($guia, $estado, $transportadora)
+    {
+        $ch = curl_init("https://new.imporsuitpro.com/bitacora/estados");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        //formdata
+        $data = [
+            'guia' => $guia,
+            'estado' => $estado,
+            'transportadora' => $transportadora
+        ];
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        echo $response;
+    }
+
     public function update($sql, $data)
     {
         $this->sql = $sql;
