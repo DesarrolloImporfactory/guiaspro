@@ -40,7 +40,6 @@ class Query extends Conexion
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
         curl_close($ch);
-        echo $response;
     }
 
     public function update($sql, $data)
