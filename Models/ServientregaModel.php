@@ -266,9 +266,15 @@ class ServientregaModel extends Query
             ]);
         } else {
             echo json_encode([
-                "status" => "400",
+                "status" => "200",
                 "message" => "La guia no puede ser anulada, porque esta siendo procesada"
             ]);
+
+
+            $sql = "UPDATE facturas_cot SET anulada = 1 WHERE numero_guia = '$id'";
+            $result = mysqli_query($this->market, $sql);
+            $sql = "DELETE FROM cabecera_cuenta_pagar WHERE guia = '$id'";
+            $result = mysqli_query($this->market, $sql);
         }
     }
 
