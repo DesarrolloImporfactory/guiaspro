@@ -261,12 +261,12 @@ class ServientregaModel extends Query
             $sql = "DELETE FROM cabecera_cuenta_pagar WHERE guia = '$id'";
             $result = mysqli_query($this->market, $sql);
             echo json_encode([
-                "status" => "200",
+                "status" => 200,
                 "message" => "Guia anulada correctamente"
             ]);
         } else {
             echo json_encode([
-                "status" => "200",
+                "status" => 200,
                 "message" => "La guia no puede ser anulada, porque esta siendo procesada"
             ]);
 
