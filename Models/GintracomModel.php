@@ -132,11 +132,29 @@ class GintracomModel extends Query
                         }
                     }
                 }
+
+                // si el estado es 7 ,8 o 9
+                if ($dato["estado"] == 7 || $dato["estado"] == 8 || $dato["estado"] == 9) {
+                    $this->terminar_novedad($guia);
+                }
             }
         }
 
         $this->webhooktelefono($guia);
     }
+
+    public function terminar_novedad($guia)
+    {
+        $sql = "UPDATE novedades SET terminado = 1 WHERE guia_novedad = '$guia'";
+        echo $sql;
+        $response =  mysqli_query($this->market, $sql);
+        echo mysqli_error($this->market);
+        print_r($response);
+        $sql = "DELETE FROM `detalle_novedad` where guia_novedad = '$guia' ";
+        $response =  mysqli_query($this->market, $sql);
+        echo mysqli_error($this->market);
+    }
+
 
     function procesarGuia($guia, $refiere)
     {
