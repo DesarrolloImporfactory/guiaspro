@@ -278,6 +278,16 @@ class ServientregaModel extends Query
         }
     }
 
+    private function terminar_novedad($guia)
+    {
+        $sql = "UPDATE novedades SET terminado = 1 WHERE guia_novedad = '$guia' ";
+        echo $sql;
+        $response =   mysqli_query($this->market, $sql);
+        print_r($response);
+        $sql = "DELETE FROM `detalle_novedad` where guia_novedad = '$guia' ";
+        $response =  mysqli_query($this->market, $sql);
+    }
+
     private function cambioDeEstado($guia, $estado)
     {
         $sql_update = "UPDATE facturas_cot SET estado_guia_sistema = '$estado' WHERE numero_guia = '$guia'";
@@ -286,8 +296,10 @@ class ServientregaModel extends Query
 
         if ($estado >=  "400" && $estado <= "499") {
             $estado = 7;
+            $this->terminar_novedad($guia);
         } else if ($estado >= "500" && $estado <= "599") {
             $estado = 9;
+            $this->terminar_novedad($guia);
         }
 
         $sql_update = "UPDATE cabecera_cuenta_pagar SET estado_guia = '$estado' WHERE guia = '$guia'";
