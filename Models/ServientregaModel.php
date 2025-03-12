@@ -215,7 +215,7 @@ class ServientregaModel extends Query
         $result = mysqli_query($this->market, $select);
         $row = mysqli_fetch_assoc($result);
         $estado = $row['estado_guia_sistema'];
-        if($estado >= 400){
+        if($estado >= 450){
             return true;
         }
         return false;
