@@ -193,6 +193,12 @@ class ServientregaModel extends Query
         $data1 = array($guia, $f_movimiento, $h_movimiento, $movimiento, $estado, $ciudad, $observacion1, $observacion2, $observacion3);
         $this->insert($sql, $data1);
 
+        // Validador de guias
+
+        if ($this->validarEstadoGuia($guia)) {
+            return;
+        }
+
         $this->cambioDeEstado($guia, $movimiento);
         if ($movimiento >= "320" && $movimiento <= "351") {
             $this->gestionarNovedad($data, $guia);
@@ -202,6 +208,17 @@ class ServientregaModel extends Query
         echo "Recibido correctamente";
 
         $this->webhooktelefono($guia);
+    }
+
+    public function validarEstadoGuia($guia){
+        $select = "SELECT estado_guia_sistema FROM facturas_cot WHERE numero_guia = '$guia'";
+        $result = mysqli_query($this->market, $select);
+        $row = mysqli_fetch_assoc($result);
+        $estado = $row['estado_guia_sistema'];
+        if($estado >= 400){
+            return true;
+        }
+        return false;
     }
 
     public function webhooktelefono($guia)
