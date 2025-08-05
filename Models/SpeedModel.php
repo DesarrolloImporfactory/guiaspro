@@ -40,7 +40,7 @@ class SpeedModel extends Query
         } else if ($matriz == 2) {
             $prefix = "MKL";
         } else {
-            $prefix = "DESA";
+            $prefix = "DES";
         }
 
         // Ejecutar la consulta para obtener el último ID y guía
@@ -80,7 +80,7 @@ class SpeedModel extends Query
                 $guia = "MKL" . str_pad($guia, 7, "0", STR_PAD_LEFT); // Formatear el número de vuelta a una cadena
             }
         } else
-        if ($prefix == 'DESA') {
+        if ($prefix == 'DES') {
             if (empty($data[0]['id'])) {
                 $guia = "DES0000001";
             } else {
