@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 require 'vendor/autoload.php';
 require_once 'Class/ImageUploader.php';
+require_once 'Class/AnotherServer.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -11,10 +12,19 @@ use Picqer\Barcode\BarcodeGeneratorPNG;
 class SpeedModel extends Query
 {
     private $market;
+    private $anotherServer;
     public function __construct()
     {
         parent::__construct();
         $this->market = mysqli_connect(HOSTMARKET, USERMARKET, PASSWORDMARKET, DBMARKET);
+        $this->anotherServer = AnotherServer::getInstance();
+        $config = [
+            "host" => $_ENV["DB_ANOTHER_HOST"],
+            "database" => $_ENV["DB_ANOTHER_DATABASE"],
+            "username" => $_ENV["DB_ANOTHER_USERNAME"],
+            "password" => $_ENV["DB_ANOTHER_PASSWORD"]
+        ];
+        $this->anotherServer->configure("chatcenter", $config);
     }
 
     public function crear($nombreO, $ciudadO, $direccionO, $telefonoO, $referenciaO, $nombre, $ciudad, $direccion, $telefono, $referencia, $contiene, $fecha, $numero_factura, $url, $recaudo, $observacion, $monto_factura, $matriz, $flete_costo)
@@ -378,6 +388,32 @@ class SpeedModel extends Query
 
     public function estado($guia, $estado)
     {
+        $sql = "SELECT * FROM facturas_cot WHERE numero_guia = '$guia'";
+        $data = mysqli_query($this->market, $sql);
+        $data = mysqli_fetch_all($data, MYSQLI_ASSOC);
+        if (empty($data)) {
+            return ["status" => 400, "message" => "Guia no encontrada en facturas"];
+        }
+
+        $id_factura = $data[0]['id_factura'];
+
+        $row = $this->anotherServer->select(
+            "chatcenter",
+            "SELECT id FROM clientes_chat_center WHERE id_factura = ? LIMIT 1",
+            [$id_factura]
+        );
+
+        $id = !empty($row) ? $row[0]['id'] : null;
+
+        if (!empty($id)) {
+            $this->anotherServer->update(
+                "chatcenter",
+                "UPDATE clientes_chat_center SET estado_factura = ? WHERE id_factura = ?",
+                [$estado, $id_factura]
+            );
+        }
+
+
         $this->bitacora($guia, $estado, 'SPEED');
         $sql = "UPDATE guias_speed SET estado = ? WHERE guia = ?";
         $update = $this->update($sql, [$estado, $guia]);
