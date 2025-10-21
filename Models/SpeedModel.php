@@ -391,9 +391,7 @@ class SpeedModel extends Query
         $sql = "SELECT * FROM facturas_cot WHERE numero_guia = '$guia'";
         $data = mysqli_query($this->market, $sql);
         $data = mysqli_fetch_all($data, MYSQLI_ASSOC);
-        if (empty($data)) {
-            return ["status" => 400, "message" => "Guia no encontrada en facturas"];
-        }
+
 
         $id_factura = $data[0]['id_factura'];
 
@@ -510,7 +508,7 @@ class SpeedModel extends Query
                 // Caso 4: Si ninguno es referido, no hacer nada
             }
         }
-        return ["status" => 200, "message" => "Estado actualizado"];
+        return ["status" => 200, "message" => "Estado actualizado", "novedad" => $texto];
     }
 
     public function buscar($guia)

@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 require 'vendor/autoload.php';
+require_once 'Class/AnotherServer.php';
 
 use setasign\Fpdi\Tcpdf\Fpdi;
 
@@ -35,11 +36,20 @@ class PDF extends Fpdi
 class ServientregaModel extends Query
 {
     private $market;
+    private $anotherServer;
 
     public function __construct()
     {
         parent::__construct();
         $this->market = mysqli_connect(HOSTMARKET, USERMARKET, PASSWORDMARKET, DBMARKET);
+        $this->anotherServer = AnotherServer::getInstance();
+        $config = [
+            "host" => $_ENV["DB_ANOTHER_HOST"],
+            "database" => $_ENV["DB_ANOTHER_DATABASE"],
+            "username" => $_ENV["DB_ANOTHER_USERNAME"],
+            "password" => $_ENV["DB_ANOTHER_PASSWORD"]
+        ];
+        $this->anotherServer->configure("chatcenter", $config);
     }
 
     public function visualizarGuia($id)
@@ -210,12 +220,13 @@ class ServientregaModel extends Query
         $this->webhooktelefono($guia);
     }
 
-    public function validarEstadoGuia($guia){
+    public function validarEstadoGuia($guia)
+    {
         $select = "SELECT estado_guia_sistema FROM facturas_cot WHERE numero_guia = '$guia'";
         $result = mysqli_query($this->market, $select);
         $row = mysqli_fetch_assoc($result);
         $estado = $row['estado_guia_sistema'];
-        if($estado >= 450){
+        if ($estado >= 450) {
             return true;
         }
         return false;
@@ -307,6 +318,16 @@ class ServientregaModel extends Query
 
     private function cambioDeEstado($guia, $estado)
     {
+        $sql = "SELECT * FROM facturas_cot WHERE numero_guia = '$guia'";
+        $result = mysqli_query($this->market, $sql);
+        $row = mysqli_fetch_all($result);
+        $id_factura = $row[0]['id_factura'] ?? null;
+
+        $isExistSql = $this->anotherServer->select("chatcenter", "SELECT id from clientes_chatcenter WHERE id_factura = ?", [$id_factura]);
+        if (!empty($isExistSql)) {
+            $this->anotherServer->update("chatcenter", "UPDATE clientes_chatcenter SET estado_guia = ? WHERE id_factura = ?", [$estado, $id_factura]);
+        }
+
         $sql_update = "UPDATE facturas_cot SET estado_guia_sistema = '$estado' WHERE numero_guia = '$guia'";
         $result_update = mysqli_query($this->market, $sql_update);
         $this->bitacora($guia, $estado, "Servientrega");
