@@ -215,7 +215,6 @@ class ServientregaModel extends Query
         }
 
         http_response_code(200);
-        echo "Recibido correctamente";
 
         $this->webhooktelefono($guia);
     }
@@ -321,10 +320,15 @@ class ServientregaModel extends Query
         $row = mysqli_fetch_all($result);
         $id_factura = $row[0]['id_factura'] ?? null;
 
+        var_dump($id_factura);
+        echo "Estado: $estado";
+
         $isExistSql = $this->anotherServer->select("chatcenter", "SELECT id from clientes_chat_center WHERE id_factura = ?", [$id_factura]);
         if (!empty($isExistSql)) {
             $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET estado_factura = ? WHERE id_factura = ?", [$estado, $id_factura]);
         }
+        echo "<br>";
+        echo $isExistSql ? "Existe en chat center" : "No existe en chat center";
 
         $sql_update = "UPDATE facturas_cot SET estado_guia_sistema = '$estado' WHERE numero_guia = '$guia'";
         $result_update = mysqli_query($this->market, $sql_update);
@@ -512,8 +516,6 @@ class ServientregaModel extends Query
 
     public function test($data)
     {
-        echo "hola";
-
         $data = json_encode($data);
         $sql = "INSERT INTO test (cas) VALUES ('$data')";
         $datas = array($data);
@@ -528,7 +530,6 @@ class ServientregaModel extends Query
         $data = mysqli_fetch_all($data, MYSQLI_ASSOC);
 
         foreach ($data as $key => $value) {
-            echo $value["cas"];
             $curl = curl_init();
             $url = "https://guias.imporsuitpro.com/Servientrega";
             curl_setopt($curl, CURLOPT_URL, $url);
