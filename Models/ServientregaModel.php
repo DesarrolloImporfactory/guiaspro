@@ -317,8 +317,8 @@ class ServientregaModel extends Query
     {
         $sql = "SELECT * FROM facturas_cot WHERE numero_guia = '$guia'";
         $result = mysqli_query($this->market, $sql);
-        $row = mysqli_fetch_all($result);
-        $id_factura = $row[0]['id_factura'] ?? null;
+        $row = mysqli_fetch_assoc($result);
+        $id_factura = $row['id_factura'] ?? null;
 
         var_dump($row);
         echo "Estado: $estado";
