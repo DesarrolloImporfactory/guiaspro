@@ -320,7 +320,7 @@ class ServientregaModel extends Query
         $row = mysqli_fetch_all($result);
         $id_factura = $row[0]['id_factura'] ?? null;
 
-        var_dump($id_factura);
+        var_dump($row);
         echo "Estado: $estado";
 
         $isExistSql = $this->anotherServer->select("chatcenter", "SELECT id from clientes_chat_center WHERE id_factura = ?", [$id_factura]);
