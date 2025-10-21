@@ -48,12 +48,16 @@ class GintracomModel extends Query
                         $stmt->bind_param("s", $guia);
                         $stmt->execute();
                         $data = $stmt->get_result()->fetch_assoc();
+                        $dete = $data;
+
+                        var_dump($dete);
 
                         if ($data) {
                             $id_plataforma = $data['id_plataforma']; // Vendedor
                             // si la plataforma vendedora es 3031 o 2324 saltar todo
                             var_dump($data);
                             $id_factura = $data['id_factura'];
+
                             var_dump($id_factura);
                             $s =  $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET estado_factura = ? WHERE id_factura = ?", [$dato["estado"], $id_factura]);
                             var_dump($s);
