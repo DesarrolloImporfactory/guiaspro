@@ -309,9 +309,7 @@ class ServientregaModel extends Query
     private function terminar_novedad($guia)
     {
         $sql = "UPDATE novedades SET terminado = 1 WHERE guia_novedad = '$guia' ";
-        echo $sql;
         $response =   mysqli_query($this->market, $sql);
-        print_r($response);
         $sql = "DELETE FROM `detalle_novedad` where guia_novedad = '$guia' ";
         $response =  mysqli_query($this->market, $sql);
     }
