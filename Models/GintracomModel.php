@@ -1,9 +1,12 @@
 <?php
+require_once 'Class/AnotherServer.php';
+
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 class GintracomModel extends Query
 {
     private $market;
+    private $anotherServer;
     public function __construct()
     {
         parent::__construct();
@@ -11,11 +14,18 @@ class GintracomModel extends Query
         if (!$this->market) {
             die("Connection failed: " . mysqli_connect_error());
         }
+        $this->anotherServer = AnotherServer::getInstance();
+        $config = [
+            "host" => $_ENV["DB_ANOTHER_HOST"],
+            "database" => $_ENV["DB_ANOTHER_DATABASE"],
+            "username" => $_ENV["DB_ANOTHER_USERNAME"],
+            "password" => $_ENV["DB_ANOTHER_PASSWORD"]
+        ];
+        $this->anotherServer->configure("chatcenter", $config);
     }
     public function webhook($datas)
     {
         //  $data = json_decode($data, true);
-        echo $datas;
         $query = "INSERT INTO gintracom_webhook (valor) VALUES ('$datas')";
         $data = array($datas);
         $quers = mysqli_query($this->market, $query);
@@ -29,7 +39,6 @@ class GintracomModel extends Query
                 $sql = "SELECT * FROM facturas_cot where numero_guia = '$guia'";
                 $data2 = mysqli_query($this->market, $sql);
                 $data2 = mysqli_fetch_all($data2, MYSQLI_ASSOC);
-                print_r($data2);
                 //actualiza market
                 if (count($data) > 0) {
                     if ($dato["estado"] > 2) {
@@ -44,6 +53,8 @@ class GintracomModel extends Query
                             $id_plataforma = $data['id_plataforma']; // Vendedor
                             // si la plataforma vendedora es 3031 o 2324 saltar todo
 
+                            $id_factura = $data['id_factura'];
+                            $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET estado_factura = ? WHERE id_factura = ?", [$dato["estado"], $id_factura]);
 
 
                             $id_propietario = $data['id_propietario']; // Proveedor
@@ -126,11 +137,28 @@ class GintracomModel extends Query
                             $response = mysqli_query($this->market, $sql);
                             echo    $sql;
                             echo mysqli_error($this->market);
+
+                            $id_factura = $data['id_factura'];
+                            $texto = '{
+                                "novedad": "' . $dato["novedades"]["nombreNovedad"] . '",
+                                "terminada": 0,
+                                "id_novedad": "' . $data3[0]["id_novedad"] . '",
+                                "solucionada": "0"
+                            }';
+                            $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET novedad_info = ? WHERE id_factura = ?", [$texto, $id_factura]);
                         } else {
                             $sql = "INSERT INTO novedades (guia_novedad, cliente_novedad, estado_novedad, novedad, tracking, fecha, id_plataforma) VALUES ( '" . $guia . "', '" . $nombreD . "', '" . $dato["novedades"]["codigoNovedad"] . "', '" . $dato["novedades"]["nombreNovedad"] . "', 'https://ec.gintracom.site/web/site/tracking', '" . $dato["novedades"]["fechaNovedad"] . "', '" . $plataforma . "')";
                             $response = mysqli_query($this->market, $sql);
                         }
                     }
+                } else {
+                    $texto = '{
+                        "novedad": null,
+                        "terminada": null,
+                        "id_novedad": null,
+                        "solucionada": null
+                    }';
+                    $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET novedad_info = ? WHERE id_factura = ?", [$texto, $id_factura]);
                 }
 
                 // si el estado es 7 ,8 o 9
