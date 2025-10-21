@@ -54,8 +54,9 @@ class GintracomModel extends Query
                             // si la plataforma vendedora es 3031 o 2324 saltar todo
 
                             $id_factura = $data['id_factura'];
-                            $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET estado_factura = ? WHERE id_factura = ?", [$dato["estado"], $id_factura]);
-
+                            var_dump($id_factura);
+                            $s =  $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET estado_factura = ? WHERE id_factura = ?", [$dato["estado"], $id_factura]);
+                            var_dump($s);
 
                             $id_propietario = $data['id_propietario']; // Proveedor
 
