@@ -424,6 +424,36 @@ class SpeedModel extends Query
         $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = $estado WHERE guia = '$guia' ";
         $update = mysqli_query($this->market, $sql);
 
+        if ($estado == 14) {
+            $sql_novedad = "SELECT * FROM novedades WHERE guia_novedad = '$guia' ";
+            $data = mysqli_query($this->market, $sql_novedad);
+            $data = mysqli_fetch_all($data, MYSQLI_ASSOC);
+
+            $texto = '{
+                    "novedad": "' . $data[0]['novedad'] . '",
+                    "terminado": "' . $data[0]['terminado'] . '",
+                    "id_novedad": "' . $data[0]['id_novedad'] . '",
+                    "solucionada": "' . $data[0]['terminado'] . '"
+                }';
+            $this->anotherServer->update(
+                "chatcenter",
+                "UPDATE clientes_chat_center SET novedad_info = ? WHERE id_factura = ?",
+                [$texto, $id_factura]
+            );
+        } else {
+            $texto = '{
+                    "novedad": null,
+                    "terminado": null,
+                    "id_novedad": null,
+                    "solucionada": null
+                }';
+            $this->anotherServer->update(
+                "chatcenter",
+                "UPDATE clientes_chat_center SET novedad_info = ? WHERE id_factura = ?",
+                [$texto, $id_factura]
+            );
+        }
+
         if ($estado == 9) {
             $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = 9, monto_recibir = ((precio_envio + full) * -1), valor_pendiente =  ((precio_envio + full) * -1) WHERE guia = '$guia' ";
             $update = mysqli_query($this->market, $sql);
