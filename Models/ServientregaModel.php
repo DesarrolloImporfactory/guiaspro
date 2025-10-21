@@ -323,9 +323,9 @@ class ServientregaModel extends Query
         $row = mysqli_fetch_all($result);
         $id_factura = $row[0]['id_factura'] ?? null;
 
-        $isExistSql = $this->anotherServer->select("chatcenter", "SELECT id from clientes_chatcenter WHERE id_factura = ?", [$id_factura]);
+        $isExistSql = $this->anotherServer->select("chatcenter", "SELECT id from clientes_chat_center WHERE id_factura = ?", [$id_factura]);
         if (!empty($isExistSql)) {
-            $this->anotherServer->update("chatcenter", "UPDATE clientes_chatcenter SET estado_guia = ? WHERE id_factura = ?", [$estado, $id_factura]);
+            $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET estado_factura = ? WHERE id_factura = ?", [$estado, $id_factura]);
         }
 
         $sql_update = "UPDATE facturas_cot SET estado_guia_sistema = '$estado' WHERE numero_guia = '$guia'";
@@ -480,7 +480,7 @@ class ServientregaModel extends Query
                 $id_plataforma
             );
 
-            $isExistSql = $this->anotherServer->select("chatcenter", "SELECT id from clientes_chatcenter WHERE id_factura = ?", [$id_factura]);
+            $isExistSql = $this->anotherServer->select("chatcenter", "SELECT id from clientes_chat_center WHERE id_factura = ?", [$id_factura]);
             if (!empty($isExistSql)) {
                 // obtener el id de la novedad insertada
                 $id_novedad = $this->market->insert_id;
@@ -491,7 +491,7 @@ class ServientregaModel extends Query
                 "id_novedad": "' . $id_novedad . '",
                 "solucionada": "0"
                 }';
-                $this->anotherServer->update("chatcenter", "UPDATE clientes_chatcenter SET novedad_info = ? WHERE id_factura = ?", [$texto, $id_factura]);
+                $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET novedad_info = ? WHERE id_factura = ?", [$texto, $id_factura]);
             } else {
                 $texto = '{
                 "novedad": null,
@@ -499,7 +499,7 @@ class ServientregaModel extends Query
                 "id_novedad": null,
                 "solucionada": null
                 }';
-                $this->anotherServer->update("chatcenter", "UPDATE clientes_chatcenter SET novedad_info = ? WHERE id_factura = ?", [$texto, $id_factura]);
+                $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET novedad_info = ? WHERE id_factura = ?", [$texto, $id_factura]);
             }
 
             // Ejecutar la consulta
