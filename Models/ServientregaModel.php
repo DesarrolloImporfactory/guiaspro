@@ -425,7 +425,10 @@ class ServientregaModel extends Query
 
     private function gestionarNovedad($guia, $laar)
     {
-        print_r($guia);
+        $sql_id_factura = "SELECT id_factura FROM facturas_cot WHERE numero_guia = '$laar'";
+        $result_id_factura = mysqli_query($this->market, $sql_id_factura);
+        $row_id_factura = mysqli_fetch_assoc($result_id_factura);
+        $id_factura = $row_id_factura['id_factura'];
 
         $sql = "SELECT * FROM facturas_cot WHERE numero_guia = '$laar'";
         $result = mysqli_query($this->market, $sql);
@@ -476,6 +479,28 @@ class ServientregaModel extends Query
                 $tracking,
                 $id_plataforma
             );
+
+            $isExistSql = $this->anotherServer->select("chatcenter", "SELECT id from clientes_chatcenter WHERE id_factura = ?", [$id_factura]);
+            if (!empty($isExistSql)) {
+                // obtener el id de la novedad insertada
+                $id_novedad = $this->market->insert_id;
+
+                $texto = '{
+                "novedad": "' . $guia["observacion1"] . ' - ' . $guia["observacion2"] . ' - ' . $guia["observacion3"] . '",
+                "terminado": "0",
+                "id_novedad": "' . $id_novedad . '",
+                "solucionada": "0"
+                }';
+                $this->anotherServer->update("chatcenter", "UPDATE clientes_chatcenter SET novedad_info = ? WHERE id_factura = ?", [$texto, $id_factura]);
+            } else {
+                $texto = '{
+                "novedad": null,
+                "terminado": null,
+                "id_novedad": null,
+                "solucionada": null
+                }';
+                $this->anotherServer->update("chatcenter", "UPDATE clientes_chatcenter SET novedad_info = ? WHERE id_factura = ?", [$texto, $id_factura]);
+            }
 
             // Ejecutar la consulta
             if ($stmt->execute()) {
