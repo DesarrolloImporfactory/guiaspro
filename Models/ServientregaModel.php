@@ -481,6 +481,7 @@ class ServientregaModel extends Query
             );
 
             $isExistSql = $this->anotherServer->select("chatcenter", "SELECT id from clientes_chat_center WHERE id_factura = ?", [$id_factura]);
+            print_r($isExistSql);
             if (!empty($isExistSql)) {
                 // obtener el id de la novedad insertada
                 $id_novedad = $this->market->insert_id;
