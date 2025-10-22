@@ -49,8 +49,9 @@ class GintracomModel extends Query
                         $stmt->execute();
                         $data = $stmt->get_result()->fetch_assoc();
                         $dete = $data;
-
+                        echo "<pre>";
                         var_dump($dete);
+                        echo "</pre>";
 
                         if ($data) {
                             $id_plataforma = $data['id_plataforma']; // Vendedor
