@@ -40,8 +40,12 @@ class GintracomModel extends Query
                 $sql = "SELECT * FROM facturas_cot where numero_guia = '$guia'";
                 $data2 = mysqli_query($this->market, $sql);
                 $data2 = mysqli_fetch_all($data2, MYSQLI_ASSOC);
-                //actualiza market
-                if (count($data) > 0) {
+
+                // FIX: Cambié de count($data) a count($data2)
+                if (count($data2) > 0) {
+                    // Inicializar $id_factura aquí para que esté disponible en todo el scope
+                    $id_factura = $data2[0]['id_factura'] ?? null;
+
                     if ($dato["estado"] > 2) {
                         // Obtener datos de la factura
                         $sql = "SELECT * FROM facturas_cot WHERE numero_guia = ?";
@@ -113,14 +117,17 @@ class GintracomModel extends Query
                         $fueAcreditada = "SELECT * FROM cabecera_cuenta_pagar WHERE guia = '$guia'";
                         $fueAcreditada = mysqli_query($this->market, $fueAcreditada);
                         $fueAcreditada = mysqli_fetch_all($fueAcreditada, MYSQLI_ASSOC);
-                        $visto = $fueAcreditada[0]["visto"];
 
-                        if ($visto == 0) {
-                            $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '" . $dato["estado"] . "', monto_recibir=precio_envio*-1, valor_pendiente=precio_envio*-1 WHERE guia = '" . $guia . "'";
-                            $response = mysqli_query($this->market, $sql);
-                        } else {
-                            $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '" . $dato["estado"] . "' WHERE guia = '" . $guia . "'";
-                            $response = mysqli_query($this->market, $sql);
+                        if (!empty($fueAcreditada)) {
+                            $visto = $fueAcreditada[0]["visto"];
+
+                            if ($visto == 0) {
+                                $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '" . $dato["estado"] . "', monto_recibir=precio_envio*-1, valor_pendiente=precio_envio*-1 WHERE guia = '" . $guia . "'";
+                                $response = mysqli_query($this->market, $sql);
+                            } else {
+                                $sql = "UPDATE cabecera_cuenta_pagar SET estado_guia = '" . $dato["estado"] . "' WHERE guia = '" . $guia . "'";
+                                $response = mysqli_query($this->market, $sql);
+                            }
                         }
                     } else {
                         $sql = "UPDATE facturas_cot SET estado_guia_sistema = '" . $dato["estado"] . "' WHERE numero_guia = '" . $guia . "'";
@@ -130,53 +137,70 @@ class GintracomModel extends Query
                         $response = mysqli_query($this->market, $sql);
                     }
                     $this->bitacora($guia, $dato["estado"], $dato["transportadora"]);
-                }
-                $plataforma = $data2[0]["id_plataforma"];
-                $nombreD = $data2[0]["nombre"];
-                print_r($dato["novedades"]);
-                if (isset($dato["novedades"])) {
-                    if (empty($dato["novedades"]["nombreNovedad"]) || $dato["novedades"]["nombreNovedad"] == "null" || $dato["novedades"]["nombreNovedad"] == null) {
-                    } else {
+
+                    // Manejo de novedades
+                    $plataforma = $data2[0]["id_plataforma"];
+                    $nombreD = $data2[0]["nombre"];
+
+                    // FIX: Validar correctamente si novedades existe Y no está vacío Y es un array asociativo
+                    $tieneNovedades = isset($dato["novedades"])
+                        && !empty($dato["novedades"])
+                        && is_array($dato["novedades"])
+                        && !empty($dato["novedades"]["nombreNovedad"])
+                        && $dato["novedades"]["nombreNovedad"] !== "null"
+                        && $dato["novedades"]["nombreNovedad"] !== null;
+
+                    print_r($dato["novedades"]);
+
+                    if ($tieneNovedades) {
                         $sql = "SELECT * FROM novedades WHERE guia_novedad = '$guia'";
                         $data3 = mysqli_query($this->market, $sql);
                         $data3 = mysqli_fetch_all($data3, MYSQLI_ASSOC);
+
                         if (count($data3) > 0) {
                             $sql = "UPDATE novedades SET estado_novedad = '" . $dato["novedades"]["codigoNovedad"] . "', novedad = '" . $dato["novedades"]["nombreNovedad"] . "', fecha = '" . $dato["novedades"]["fechaNovedad"] . "', solucionada=0  WHERE guia_novedad = '" . $guia . "'";
                             $response = mysqli_query($this->market, $sql);
-                            echo    $sql;
+                            echo $sql;
                             echo mysqli_error($this->market);
 
-                            $id_factura = $data['id_factura'];
                             $texto = '{
                                 "novedad": "' . $dato["novedades"]["nombreNovedad"] . '",
                                 "terminada": 0,
                                 "id_novedad": "' . $data3[0]["id_novedad"] . '",
                                 "solucionada": "0"
                             }';
-                            $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET novedad_info = ? WHERE id_factura = ?", [$texto, $id_factura]);
+
+                            if ($id_factura) {
+                                $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET novedad_info = ? WHERE id_factura = ?", [$texto, $id_factura]);
+                            }
                         } else {
                             $sql = "INSERT INTO novedades (guia_novedad, cliente_novedad, estado_novedad, novedad, tracking, fecha, id_plataforma) VALUES ( '" . $guia . "', '" . $nombreD . "', '" . $dato["novedades"]["codigoNovedad"] . "', '" . $dato["novedades"]["nombreNovedad"] . "', 'https://ec.gintracom.site/web/site/tracking', '" . $dato["novedades"]["fechaNovedad"] . "', '" . $plataforma . "')";
                             $response = mysqli_query($this->market, $sql);
                         }
-                    }
-                } else {
-                    $texto = '{
-                        "novedad": null,
-                        "terminada": null,
-                        "id_novedad": null,
-                        "solucionada": null
-                    }';
-                    $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET novedad_info = ? WHERE id_factura = ?", [$texto, $id_factura]);
-                }
+                    } else {
+                        // No hay novedades, limpiar el campo en chatcenter
+                        $texto = '{
+                            "novedad": null,
+                            "terminada": null,
+                            "id_novedad": null,
+                            "solucionada": null
+                        }';
 
-                // si el estado es 7 ,8 o 9
-                if ($dato["estado"] == 7 || $dato["estado"] == 8 || $dato["estado"] == 9) {
-                    $this->terminar_novedad($guia);
+                        if ($id_factura) {
+                            $this->anotherServer->update("chatcenter", "UPDATE clientes_chat_center SET novedad_info = ? WHERE id_factura = ?", [$texto, $id_factura]);
+                        }
+                    }
+
+                    // si el estado es 7, 8 o 9
+                    if ($dato["estado"] == 7 || $dato["estado"] == 8 || $dato["estado"] == 9) {
+                        $this->terminar_novedad($guia);
+                    }
+
+                    // FIX: Mover webhooktelefono dentro del loop y condición
+                    $this->webhooktelefono($guia);
                 }
             }
         }
-
-        $this->webhooktelefono($guia);
     }
 
     public function terminar_novedad($guia)
