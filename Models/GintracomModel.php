@@ -51,6 +51,7 @@ class GintracomModel extends Query
                         $dete = $data;
                         echo "<pre>";
                         var_dump($dete);
+                        echo "--------------------------------";
                         echo "</pre>";
 
                         if ($data) {
