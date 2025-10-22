@@ -32,6 +32,7 @@ class GintracomModel extends Query
 
         /*         $this->insert($query, $data);
          */        //
+        var_dump($datas);
         $datos = json_decode($datas, true);
         if (isset($datos["data"]) && is_array($datos["data"])) {
             foreach ($datos["data"] as $dato) {
