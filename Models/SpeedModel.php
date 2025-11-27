@@ -445,6 +445,8 @@ class SpeedModel extends Query
                     "id_novedad": null,
                     "solucionada": null
                 }';
+
+                
             $this->anotherServer->update(
                 "chatcenter",
                 "UPDATE clientes_chat_center SET novedad_info = ? WHERE id_factura = ?",
