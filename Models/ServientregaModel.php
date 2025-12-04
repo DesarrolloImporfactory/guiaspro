@@ -256,7 +256,7 @@ class ServientregaModel extends Query
         $ch = curl_init();
         $url = "https://new.imporsuitpro.com/speed/automatizador";
 
-        $data = http_build_query(['id_factura' => $id_factura]);
+        $data = http_build_query(['guia' => $guia]);
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
