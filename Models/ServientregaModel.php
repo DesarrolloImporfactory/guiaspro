@@ -177,14 +177,18 @@ class ServientregaModel extends Query
 
     public function actualizar_guia($data)
     {
+        file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: INICIO\n", FILE_APPEND);
+
         $token = "ef4983b54cc73a26d69eac01bca287d0a0f4db5a6eb535d41c29d9ce94a7eb6a";
 
         $cas = json_encode($data);
+        file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: Data JSON encodificada\n", FILE_APPEND);
 
-        $sql = "INSERT INTO test (cas) VALUES ($cas)";
+        $sql = "INSERT INTO test (cas) VALUES ('$cas')";
         $datas = array($cas);
 
         $respuesta = mysqli_query($this->market, $sql);
+        file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: INSERT test ejecutado\n", FILE_APPEND);
 
         /*  $data = json_decode($data,true);  */
         //la fecha llega asi: "fecha_movimiento_novedad": "2024-04-24 12:03:10"
@@ -199,24 +203,39 @@ class ServientregaModel extends Query
         $observacion2 = $data['observacion2'];
         $observacion3 = $data['observacion3'];
 
+        file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: Variables extraídas - Guia: $guia, Movimiento: $movimiento\n", FILE_APPEND);
+
         $sql = "INSERT INTO servi_data (guia, f_movimiento, h_movimiento, movimiento, estado, ciudad, observacion1, observacion2, observacion3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $data1 = array($guia, $f_movimiento, $h_movimiento, $movimiento, $estado, $ciudad, $observacion1, $observacion2, $observacion3);
         $this->insert($sql, $data1);
+        file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: INSERT servi_data ejecutado\n", FILE_APPEND);
 
         // Validador de guias
+        file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: Validando estado de guía\n", FILE_APPEND);
 
         if ($this->validarEstadoGuia($guia)) {
+            file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: Guía ya procesada (estado >= 450), RETURN\n", FILE_APPEND);
             return;
         }
 
+        file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: Iniciando cambioDeEstado\n", FILE_APPEND);
         $this->cambioDeEstado($guia, $movimiento);
+        file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: cambioDeEstado completado\n", FILE_APPEND);
+
         if ($movimiento >= "320" && $movimiento <= "351") {
+            file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: Movimiento en rango de novedad, ejecutando gestionarNovedad\n", FILE_APPEND);
             $this->gestionarNovedad($data, $guia);
+            file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: gestionarNovedad completado\n", FILE_APPEND);
         }
 
         http_response_code(200);
+        file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: Response code 200 enviado\n", FILE_APPEND);
 
+        file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: Iniciando webhooktelefono\n", FILE_APPEND);
         $this->webhooktelefono($guia);
+        file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: webhooktelefono completado\n", FILE_APPEND);
+
+        file_put_contents('/tmp/servi.log', date('c') . " - actualizar_guia: FIN\n", FILE_APPEND);
     }
 
     public function validarEstadoGuia($guia)
