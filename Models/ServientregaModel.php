@@ -255,18 +255,29 @@ class ServientregaModel extends Query
         $id_factura = $this->findIdFactura($guia);
         $ch = curl_init();
         $url = "https://new.imporsuitpro.com/speed/automatizador";
-        //formdata 
-        $data = array('id_factura' => $id_factura);
-        $data = http_build_query($data);
+
+        $data = http_build_query(['id_factura' => $id_factura]);
+
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
 
-        echo $response;
+        // EVITA BLOQUEO
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            file_put_contents('/tmp/servi.log', date('c') . " - webhooktelefono ERROR: " . curl_error($ch) . "\n", FILE_APPEND);
+        } else {
+            file_put_contents('/tmp/servi.log', date('c') . " - webhooktelefono RESPONSE: " . $response . "\n", FILE_APPEND);
+        }
+
+        curl_close($ch);
     }
+
 
     public function findIdFactura($guia)
     {
